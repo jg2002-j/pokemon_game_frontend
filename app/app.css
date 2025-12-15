@@ -3,6 +3,206 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* =========================
+   Tanklager
+   ========================= */
+@font-face {
+    font-family: "Tanklager";
+    src: url("../assets/fonts/TanklagerVF.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* =========================
+   Victor Mono – Regular
+   ========================= */
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-Italic.woff2") format("woff2");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-Oblique.woff2") format("woff2");
+    font-weight: 400;
+    font-style: oblique;
+    font-display: swap;
+}
+
+/* =========================
+   Victor Mono – Thin (100)
+   ========================= */
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-Thin.woff2") format("woff2");
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-ThinItalic.woff2") format("woff2");
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-ThinOblique.woff2") format("woff2");
+    font-weight: 100;
+    font-style: oblique;
+    font-display: swap;
+}
+
+/* =========================
+   Victor Mono – ExtraLight (200)
+   ========================= */
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-ExtraLight.woff2") format("woff2");
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-ExtraLightItalic.woff2") format("woff2");
+    font-weight: 200;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-ExtraLightOblique.woff2") format("woff2");
+    font-weight: 200;
+    font-style: oblique;
+    font-display: swap;
+}
+
+/* =========================
+   Victor Mono – Light (300)
+   ========================= */
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-Light.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-LightItalic.woff2") format("woff2");
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-LightOblique.woff2") format("woff2");
+    font-weight: 300;
+    font-style: oblique;
+    font-display: swap;
+}
+
+/* =========================
+   Victor Mono – Medium (500)
+   ========================= */
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-MediumItalic.woff2") format("woff2");
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-MediumOblique.woff2") format("woff2");
+    font-weight: 500;
+    font-style: oblique;
+    font-display: swap;
+}
+
+/* =========================
+   Victor Mono – SemiBold (600)
+   ========================= */
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-SemiBoldItalic.woff2") format("woff2");
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-SemiBoldOblique.woff2") format("woff2");
+    font-weight: 600;
+    font-style: oblique;
+    font-display: swap;
+}
+
+/* =========================
+   Victor Mono – Bold (700)
+   ========================= */
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-BoldItalic.woff2") format("woff2");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Victor Mono";
+    src: url("../assets/fonts/VictorMono/VictorMono-BoldOblique.woff2") format("woff2");
+    font-weight: 700;
+    font-style: oblique;
+    font-display: swap;
+}
+
 :root {
     --background: oklch(93.88% 0.033 300.19);
     --secondary-background: oklch(100% 0 0);
@@ -75,5 +275,15 @@
     h5,
     h6 {
         @apply font-heading;
+    }
+}
+
+@layer utilities {
+    .font-pokemon {
+        font-family: "Victor Mono", ui-monospace, monospace;
+    }
+
+    .font-tanklager {
+        font-family: "Tanklager";
     }
 }

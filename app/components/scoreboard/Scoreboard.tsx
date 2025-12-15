@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import type { Player } from "~/types/Player";
-import PlayerTile from "./PlayerTile";
+import PlayerCard from "./PlayerCard";
 import type { Generation } from "~/types/Generation";
 
 interface ScoreboardProps {
@@ -18,13 +17,13 @@ export default function Scoreboard({ team1, team2 }: ScoreboardProps) {
                 <h2>TEAM ONE</h2>
                 <div className="grid grid-cols-5 gap-5">
                     {team1?.map((p) => (
-                        <PlayerTile key={p.username} p={p} />
+                        <PlayerCard key={p.username} p={p} />
                     ))}
                 </div>
                 <h2>TEAM TWO</h2>
                 <div className="grid grid-cols-5 gap-5">
                     {team2?.map((p) => (
-                        <PlayerTile key={p.username} p={p} />
+                        <PlayerCard key={p.username} p={p} />
                     ))}
                 </div>
             </div>

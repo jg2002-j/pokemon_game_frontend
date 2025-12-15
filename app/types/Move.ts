@@ -9,4 +9,5 @@ export interface Move {
     power: number | null;
     type: PokeType;
     damageClass: string;
+    textDesc: string;
 }
