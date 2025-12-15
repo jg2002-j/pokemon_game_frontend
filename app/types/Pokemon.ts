@@ -1,9 +1,10 @@
+import type { ImgLinks } from "./ImgLinks";
 import type { Move } from "./Move";
 import type { Stats } from "./Stats";
 
 export interface Pokemon {
     id: number;
-    imgLink: string;
+    imgLinks: ImgLinks;
     criesLink: string;
     name: string;
     nature: string;

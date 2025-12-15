@@ -7,7 +7,7 @@ export default defineConfig({
     plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
     server: {
         proxy: {
-            "/state": {
+            "/game/currentState": {
                 target: "http://localhost:8080",
                 changeOrigin: true,
             },

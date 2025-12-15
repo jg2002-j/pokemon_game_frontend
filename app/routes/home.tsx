@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useContext } from "react";
 import type { Route } from "./+types/home";
 import Scoreboard from "~/components/scoreboard/Scoreboard";
 import type { LogMessage } from "~/types/LogMessage";
@@ -7,18 +7,22 @@ import LogBox from "~/components/log/LogBox";
 import { Button } from "~/components/ui/button";
 import { RefreshCcw, Unplug } from "lucide-react";
 import type { Player } from "~/types/Player";
+import type { GameState } from "~/types/GameState";
 
 export function meta({}: Route.MetaArgs) {
     return [{ title: "Pokemon Game YAY" }, { name: "Pokemon Game", content: "Welcome to Pokemon Game!" }];
 }
 
 export default function Home() {
+    const [pkmnLvl, setPkmnLvl] = useState<number | null>(null);
+    const [pkmnGen, setPkmnGen] = useState<string | null>(null);
+    const [showdownIcons, setShowdownIcons] = useState<boolean>(false);
     const [messages, setMessages] = useState<LogMessage[]>([]);
     const [gameEvents, setGameEvents] = useState<GameEvent[]>([]);
 
     const websocketRef = useRef<WebSocket | null>(null);
 
-    function connect() {
+    function connectWebSocket() {
         if (websocketRef.current && websocketRef.current.readyState === WebSocket.OPEN) {
             log("Already connected!");
             return;
@@ -44,26 +48,31 @@ export default function Home() {
         };
     }
 
-    async function refresh() {
+    async function manualFetch() {
         try {
-            const response = await fetch("/state/current");
+            const response = await fetch("/game/currentState");
             if (!response.ok) {
                 console.error(`HTTP error! status: ${response.status}`);
             }
 
-            const players: Player[] = await response.json();
+            const gameState: GameState = await response.json();
+            console.log(gameState);
+            setPkmnLvl(gameState.pokemonLevel);
+            setPkmnGen(gameState.pokemonGen);
+            setShowdownIcons(gameState.useShowdownIcons);
 
-            const joinEvents: GameEvent[] = players.map((player) => ({
-                timestamp: Date.now(),
-                player,
-                eventType: "JOIN",
-                result: {
-                    success: true,
-                    message: `Fetched ${player.username}.`,
-                },
-            }));
-
-            setGameEvents(joinEvents);
+            if (gameState.allPlayers.length > 0) {
+                const joinEvents: GameEvent[] = gameState.allPlayers.map((player) => ({
+                    timestamp: Date.now(),
+                    player,
+                    eventType: "JOIN",
+                    result: {
+                        success: true,
+                        message: `Fetched ${player.username}.`,
+                    },
+                }));
+                setGameEvents(joinEvents);
+            }
         } catch (err: any) {
             console.error(err.message || "Something went wrong");
         }
@@ -94,6 +103,12 @@ export default function Home() {
             }
         });
 
+        const sortByUsername = (a: Player, b: Player) =>
+            a.username.localeCompare(b.username, undefined, { sensitivity: "base" });
+
+        t1.sort(sortByUsername);
+        t2.sort(sortByUsername);
+
         return { team1: t1, team2: t2 };
     }, [gameEvents]);
 
@@ -105,16 +120,20 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="border-2 rounded m-3 p-5 flex flex-col gap-5">
+        <div className="p-5 flex flex-col gap-5">
             <div className="flex gap-2">
-                <Button onClick={connect}>
+                <Button onClick={connectWebSocket}>
                     <Unplug /> Connect Websocket
                 </Button>
-                <Button onClick={refresh}>
+                <Button onClick={manualFetch}>
                     <RefreshCcw /> Manual Fetch
                 </Button>
             </div>
-            <Scoreboard team1={team1} team2={team2} />
+            <div className="flex gap-2">
+                <h2>Level {pkmnLvl}</h2>
+                <h2>Generation {pkmnGen}</h2>
+            </div>
+            <Scoreboard team1={team1} team2={team2} pkmnGen={pkmnGen} showdownIcons={showdownIcons} />
             <LogBox msgs={messages} />
         </div>
     );

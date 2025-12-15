@@ -1,4 +1,3 @@
-// Pokemon Move
 export interface Move {
     id: number;
     name: string;

@@ -4,7 +4,7 @@ import type { LogMessage } from "~/types/LogMessage";
 function LogBox({ msgs }: { msgs: LogMessage[] }) {
     return (
         <div>
-            <Accordion type="single" collapsible className="w-full max-w-2xl">
+            <Accordion defaultValue="logmsgs" type="single" collapsible className="w-full">
                 <AccordionItem value="logmsgs">
                     <AccordionTrigger>Log Messages</AccordionTrigger>
                     <AccordionContent>
