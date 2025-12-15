@@ -56,7 +56,16 @@ export default function Home() {
             }
 
             const gameState: GameState = await response.json();
-            console.log(gameState);
+            log(
+                "Fetched current gameState -> GEN: " +
+                    gameState.pokemonGen +
+                    ", LVL: " +
+                    gameState.pokemonLevel +
+                    ", UseShowdownIcons: " +
+                    gameState.useShowdownIcons +
+                    ", Players: " +
+                    gameState.allPlayers.map((p) => p.username)
+            );
             setPkmnLvl(gameState.pokemonLevel);
             setPkmnGen(gameState.pokemonGen);
             setShowdownIcons(gameState.useShowdownIcons);
