@@ -1,3 +1,5 @@
+import type { PokeType } from "./PokeType";
+
 export interface Move {
     id: number;
     name: string;
@@ -5,6 +7,6 @@ export interface Move {
     currentPp: number;
     basePp: number;
     power: number | null;
-    type: string;
+    type: PokeType;
     damageClass: string;
 }

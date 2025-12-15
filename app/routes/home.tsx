@@ -1,149 +1,95 @@
 import { useState, useRef, useEffect, useMemo, useContext } from "react";
 import type { Route } from "./+types/home";
+
 import Scoreboard from "~/components/scoreboard/Scoreboard";
-import type { LogMessage } from "~/types/LogMessage";
-import type { PlayerEvent } from "~/types/events/PlayerEvent";
 import LogBox from "~/components/log/LogBox";
-import { Button } from "~/components/ui/button";
-import { RefreshCcw, Unplug } from "lucide-react";
+import WebSocketButton from "~/components/home/WebSocketButton";
+import ManualFetchButton from "~/components/home/ManualFetchButton";
+import { Badge } from "~/components/ui/badge";
+
+import type { LogMessage } from "~/types/LogMessage";
 import type { Player } from "~/types/Player";
-import type { GameState } from "~/types/GameState";
+import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
+import type { Generation } from "~/types/Generation";
 
 export function meta({}: Route.MetaArgs) {
     return [{ title: "Pokemon Game YAY" }, { name: "Pokemon Game", content: "Welcome to Pokemon Game!" }];
 }
 
 export default function Home() {
+    const [logMsgs, setLogMsgs] = useState<LogMessage[]>([]);
+
     const [pkmnLvl, setPkmnLvl] = useState<number | null>(null);
-    const [pkmnGen, setPkmnGen] = useState<string | null>(null);
+    const [pkmnGen, setPkmnGen] = useState<Generation | undefined>(undefined);
     const [showdownIcons, setShowdownIcons] = useState<boolean>(false);
-    const [messages, setMessages] = useState<LogMessage[]>([]);
-    const [gameEvents, setGameEvents] = useState<PlayerEvent[]>([]);
 
-    const websocketRef = useRef<WebSocket | null>(null);
+    const [turnNum, setTurnNum] = useState<number | null>(null);
 
-    function connectWebSocket() {
-        if (websocketRef.current && websocketRef.current.readyState === WebSocket.OPEN) {
-            log("Already connected!");
-            return;
-        }
-
-        const ws = new WebSocket("ws://localhost:8080/scoreboard");
-        websocketRef.current = ws;
-
-        ws.onopen = () => log("Connected!");
-        ws.onmessage = (event: MessageEvent) => {
-            try {
-                const data: PlayerEvent = JSON.parse(event.data);
-                setGameEvents((prev) => [...prev.slice(-500), data]);
-                log(data.result.message);
-            } catch (err) {
-                console.error("Failed to parse message", err);
-            }
-        };
-        ws.onclose = () => log("Disconnected");
-        ws.onerror = (event) => {
-            console.error(event);
-            log("WebSocket error occurred");
-        };
-    }
-
-    async function manualFetch() {
-        try {
-            const response = await fetch("/game/currentState");
-            if (!response.ok) {
-                console.error(`HTTP error! status: ${response.status}`);
-            }
-
-            const gameState: GameState = await response.json();
-            log(
-                "Fetched current gameState -> GEN: " +
-                    gameState.pokemonGen +
-                    ", LVL: " +
-                    gameState.pokemonLevel +
-                    ", UseShowdownIcons: " +
-                    gameState.useShowdownIcons +
-                    ", Players: " +
-                    gameState.allPlayers.map((p) => p.username)
-            );
-            setPkmnLvl(gameState.pokemonLevel);
-            setPkmnGen(gameState.pokemonGen);
-            setShowdownIcons(gameState.useShowdownIcons);
-
-            if (gameState.allPlayers.length > 0) {
-                const joinEvents: PlayerEvent[] = gameState.allPlayers.map((player) => ({
-                    timestamp: Date.now(),
-                    player,
-                    eventType: "JOIN",
-                    result: {
-                        success: true,
-                        message: `Fetched ${player.username}.`,
-                    },
-                }));
-                setGameEvents(joinEvents);
-            }
-        } catch (err: any) {
-            console.error(err.message || "Something went wrong");
-        }
-    }
-
-    function log(msg: string) {
-        const timestamp = new Date().toLocaleTimeString();
-        const logEntry: LogMessage = { timestamp, message: msg };
-        setMessages((prev) => [...prev, logEntry]);
-    }
+    const [players, setPlayers] = useState<Player[]>([]);
+    const [playerTurnOpts, setPlayerTurnOpts] = useState<PlayerTurnOption[]>([]);
 
     const { team1, team2 } = useMemo(() => {
-        const t1: Player[] = [];
-        const t2: Player[] = [];
+        const team1: Player[] = [];
+        const team2: Player[] = [];
 
-        gameEvents.forEach(({ player, eventType }) => {
-            const team = player.teamNum === 1 ? t1 : t2;
-
-            if (eventType === "JOIN") {
-                if (!team.some((p) => p.username === player.username)) {
-                    team.push(player);
-                }
-            }
-
-            if (eventType === "LEAVE") {
-                const index = team.findIndex((p) => p.username === player.username);
-                if (index !== -1) team.splice(index, 1);
+        players.forEach((p) => {
+            const team = p.teamNum === 1 ? team1 : team2;
+            if (!team.some((player) => player.username === p.username)) {
+                team.push(p);
             }
         });
 
         const sortByUsername = (a: Player, b: Player) =>
             a.username.localeCompare(b.username, undefined, { sensitivity: "base" });
 
-        t1.sort(sortByUsername);
-        t2.sort(sortByUsername);
+        team1.sort(sortByUsername);
+        team2.sort(sortByUsername);
 
-        return { team1: t1, team2: t2 };
-    }, [gameEvents]);
+        return { team1, team2 };
+    }, [players]);
 
-    useEffect(() => {
-        return () => {
-            websocketRef.current?.close();
-            websocketRef.current = null;
-        };
-    }, []);
+    const logMsg = (msg: string) => {
+        console.log(msg);
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry: LogMessage = { timestamp, message: msg };
+        setLogMsgs((prev) => [...prev, logEntry]);
+    };
 
     return (
         <div className="p-5 flex flex-col gap-5">
-            <div className="flex gap-2">
-                <Button onClick={connectWebSocket}>
-                    <Unplug /> Connect Websocket
-                </Button>
-                <Button onClick={manualFetch}>
-                    <RefreshCcw /> Manual Fetch
-                </Button>
-            </div>
-            <div className="flex gap-2">
-                <h2>Level {pkmnLvl}</h2>
-                <h2>Generation {pkmnGen}</h2>
+            <div className="flex justify-between items-center gap-5">
+                <div className="flex gap-5">
+                    <WebSocketButton
+                        logMsg={logMsg}
+                        setPkmnLvl={setPkmnLvl}
+                        setPkmnGen={setPkmnGen}
+                        setShowdownIcons={setShowdownIcons}
+                        players={players}
+                        setPlayers={setPlayers}
+                        setPlayerTurnOpts={setPlayerTurnOpts}
+                        setTurnNum={setTurnNum}
+                    />
+                    <ManualFetchButton
+                        logMsg={logMsg}
+                        setPkmnLvl={setPkmnLvl}
+                        setPkmnGen={setPkmnGen}
+                        setShowdownIcons={setShowdownIcons}
+                        setPlayers={setPlayers}
+                    />
+                </div>
+                <div className="flex gap-5">
+                    <div className="flex items-center gap-2">
+                        <span className="font-bold text-lg">Level</span>
+                        <Badge>{pkmnLvl}</Badge>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <span className="font-bold text-lg">Generation</span>
+                        <Badge>{pkmnGen?.name.toUpperCase()}</Badge>
+                    </div>
+                </div>
             </div>
             <Scoreboard team1={team1} team2={team2} pkmnGen={pkmnGen} showdownIcons={showdownIcons} />
-            <LogBox msgs={messages} />
+            <LogBox msgs={logMsgs} />
         </div>
     );
 }

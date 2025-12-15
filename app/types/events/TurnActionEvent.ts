@@ -5,7 +5,8 @@ type TurnActionEvtType = "HP_CHANGE" | "AILMENT_CHANGE" | "STATS_CHANGE" | "INFO
 
 export interface TurnActionEvent {
     timestamp: string;
-    eventTypes: TurnActionEvtType[];
+    eventType: "TURN_ACTION_EVENT";
+    turnActionEvtTypes: TurnActionEvtType[];
     affectedPlayer: Player;
     result: Result;
 }

@@ -1,14 +1,14 @@
-import type { ImgLinks } from "./ImgLinks";
 import type { Move } from "./Move";
+import type { PokeType } from "./PokeType";
 import type { Stats } from "./Stats";
 
 export interface Pokemon {
     id: number;
-    imgLinks: ImgLinks;
+    spriteLink: string;
     criesLink: string;
     name: string;
     nature: string;
-    types: string[];
+    types: PokeType[];
     moves: Move[];
     currentStats: Stats;
     baseStats: Stats;

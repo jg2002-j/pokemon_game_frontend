@@ -3,7 +3,8 @@ import type { Result } from "../Result";
 
 export interface PlayerEvent {
     timestamp: number;
+    eventType: "PLAYER_EVENT";
+    playerEvtType: "JOIN" | "LEAVE";
     player: Player;
-    eventType: "JOIN" | "LEAVE";
     result: Result;
 }

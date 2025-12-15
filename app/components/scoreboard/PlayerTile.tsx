@@ -1,17 +1,13 @@
 import type { Player } from "~/types/Player";
 import { Progress } from "~/components/ui/progress";
-import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
-import type { ImgLinks } from "~/types/ImgLinks";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 
 interface PlayerTileProps {
     p: Player;
-    icon: keyof ImgLinks;
 }
 
-export default function PlayerTile({ p, icon }: PlayerTileProps) {
+export default function PlayerTile({ p }: PlayerTileProps) {
     const hpPercent = Math.max(0, Math.min(100, (p.pokemon.currentHp / p.pokemon.baseStats.HP) * 100));
     return (
         <>
@@ -21,7 +17,7 @@ export default function PlayerTile({ p, icon }: PlayerTileProps) {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2 h-full">
                     <div className="flex w-full gap-5 justify-between items-center">
-                        <img src={p.pokemon.imgLinks[icon]} alt={p.pokemon.name} className="w-16 h-16" />
+                        <img src={p.pokemon.spriteLink} alt={p.pokemon.name} className="w-16 h-16" />
                         <div className="flex flex-col gap-2">
                             <div className="flex justify-between items-center">
                                 <p>{p.pokemon.name.toUpperCase()}</p>
@@ -33,12 +29,14 @@ export default function PlayerTile({ p, icon }: PlayerTileProps) {
                         </div>
                     </div>
                     <div className="flex flex-col gap-2 text-xs uppercase">
-                        {p.pokemon.moves.map((m) => (
-                            <TooltipProvider key={m.name}>
+                        {p.pokemon.moves.map((m, index) => (
+                            <TooltipProvider
+                                key={`${p.username}-${p.pokemon.id}-${p.activePokemonIndex}-${m.name}-${index}`}
+                            >
                                 <Tooltip>
                                     <TooltipTrigger asChild>
-                                        <div className="rounded border px-2 py-1 grid grid-cols-4 gap-5">
-                                            <span className="col-span-1">{m.type}</span>
+                                        <div className="rounded border px-2 py-1 grid grid-cols-4 gap-5 items-center">
+                                            <img src={m.type.imgLink} alt={m.type.name} className="h-3" />
                                             <span className="col-span-2">{m.name}</span>
                                             <span className="col-span-1 font-mono text-gray-500 text-end">
                                                 {m.currentPp}/{m.basePp}
@@ -55,11 +53,11 @@ export default function PlayerTile({ p, icon }: PlayerTileProps) {
                     </div>
                 </CardContent>
                 <CardFooter className="flex gap-2">
-                    {p.pokemonTeam.map((pokemon) => (
-                        <TooltipProvider key={pokemon.id}>
+                    {p.pokemonTeam.map((pokemon, index) => (
+                        <TooltipProvider key={`${p.username}-${pokemon.id}-${index}`}>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <img src={pokemon.imgLinks[icon]} alt={pokemon.name} className="w-8 h-8" />
+                                    <img src={pokemon.spriteLink} alt={pokemon.name} className="w-8 h-8" />
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>{pokemon.name.toUpperCase()}</p>

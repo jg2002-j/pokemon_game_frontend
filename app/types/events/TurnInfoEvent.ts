@@ -1,9 +1,9 @@
 import type { Result } from "../Result";
-
-type ActionType = "SWITCH" | "HEAL" | "WAIT" | "ATTACK" | "NONE";
+import type { ActionType } from "./ActionType";
 
 export interface TurnInfoEvent {
     timestamp: string;
-    playerActionOptions: Map<string, ActionType[]>;
+    eventType: "TURN_INFO_EVENT";
+    playerActionOptions: Record<string, ActionType[]>;
     result: Result;
 }
