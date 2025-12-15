@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo, useContext } from "react";
 import type { Route } from "./+types/home";
 import Scoreboard from "~/components/scoreboard/Scoreboard";
 import type { LogMessage } from "~/types/LogMessage";
-import type { GameEvent } from "~/types/events/GameEvent";
+import type { PlayerEvent } from "~/types/events/PlayerEvent";
 import LogBox from "~/components/log/LogBox";
 import { Button } from "~/components/ui/button";
 import { RefreshCcw, Unplug } from "lucide-react";
@@ -18,7 +18,7 @@ export default function Home() {
     const [pkmnGen, setPkmnGen] = useState<string | null>(null);
     const [showdownIcons, setShowdownIcons] = useState<boolean>(false);
     const [messages, setMessages] = useState<LogMessage[]>([]);
-    const [gameEvents, setGameEvents] = useState<GameEvent[]>([]);
+    const [gameEvents, setGameEvents] = useState<PlayerEvent[]>([]);
 
     const websocketRef = useRef<WebSocket | null>(null);
 
@@ -34,7 +34,7 @@ export default function Home() {
         ws.onopen = () => log("Connected!");
         ws.onmessage = (event: MessageEvent) => {
             try {
-                const data: GameEvent = JSON.parse(event.data);
+                const data: PlayerEvent = JSON.parse(event.data);
                 setGameEvents((prev) => [...prev.slice(-500), data]);
                 log(data.result.message);
             } catch (err) {
@@ -71,7 +71,7 @@ export default function Home() {
             setShowdownIcons(gameState.useShowdownIcons);
 
             if (gameState.allPlayers.length > 0) {
-                const joinEvents: GameEvent[] = gameState.allPlayers.map((player) => ({
+                const joinEvents: PlayerEvent[] = gameState.allPlayers.map((player) => ({
                     timestamp: Date.now(),
                     player,
                     eventType: "JOIN",

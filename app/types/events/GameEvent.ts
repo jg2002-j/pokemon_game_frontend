@@ -1,9 +1,8 @@
-import type { Player } from "../Player";
 import type { Result } from "../Result";
 
 export interface GameEvent {
-    timestamp: number;
-    player: Player;
-    eventType: "JOIN" | "LEAVE";
+    timestamp: string;
+    eventType: "LEVEL_CHANGE" | "GENERATION_CHANGE" | "TURN_CHANGE";
+    newVal: number;
     result: Result;
 }

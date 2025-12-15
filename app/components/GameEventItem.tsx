@@ -1,6 +1,6 @@
-import type { GameEvent } from "~/types/events/GameEvent";
+import type { PlayerEvent } from "~/types/events/PlayerEvent";
 
-export default function GameEventItem({ event }: { event: GameEvent }) {
+export default function GameEventItem({ event }: { event: PlayerEvent }) {
     return (
         <div className="border p-2 rounded bg-gray-100">
             <p>
