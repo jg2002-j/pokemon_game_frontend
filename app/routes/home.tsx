@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect, useMemo, useContext } from "react";
 import type { Route } from "./+types/home";
 
-import Scoreboard from "~/components/scoreboard/Scoreboard";
-import LogBox from "~/components/log/LogBox";
 import WebSocketButton from "~/components/home/WebSocketButton";
 import ManualFetchButton from "~/components/home/ManualFetchButton";
+import LogBoxButton from "~/components/log/LogBoxButton";
+
+import Scoreboard from "~/components/scoreboard/Scoreboard";
+import GamePanel from "~/components/game/GamePanel";
 import { Badge } from "~/components/ui/badge";
 
 import type { LogMessage } from "~/types/LogMessage";
@@ -56,8 +58,8 @@ export default function Home() {
     };
 
     return (
-        <div className="p-5 flex flex-col gap-5">
-            <div className="flex justify-between items-center gap-5">
+        <>
+            <div className="fixed w-full p-5 flex justify-between items-center gap-5">
                 <div className="flex gap-5">
                     <WebSocketButton
                         logMsg={logMsg}
@@ -76,6 +78,7 @@ export default function Home() {
                         setShowdownIcons={setShowdownIcons}
                         setPlayers={setPlayers}
                     />
+                    <LogBoxButton msgs={logMsgs} />
                 </div>
                 <div className="flex gap-5 select-none">
                     <div className="flex items-center gap-2">
@@ -92,8 +95,10 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <Scoreboard team1={team1} team2={team2} pkmnGen={pkmnGen} showdownIcons={showdownIcons} />
-            <LogBox msgs={logMsgs} />
-        </div>
+            <div className="p-5 flex flex-col gap-10">
+                <GamePanel players={players} playerOpts={playerTurnOpts} />
+                <Scoreboard players={players} team1={team1} team2={team2} />
+            </div>
+        </>
     );
 }
