@@ -8,8 +8,8 @@ import type { Player } from "~/types/Player";
 import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
 
 export const handleGameState = (
-    logMsg: (msg: string) => void,
     gameState: GameState,
+    logMsg: (msg: string) => void,
     setPkmnLvl: React.Dispatch<React.SetStateAction<number | null>>,
     setPkmnGen: React.Dispatch<React.SetStateAction<Generation | undefined>>,
     setShowdownIcons: React.Dispatch<React.SetStateAction<boolean>>,
@@ -36,7 +36,8 @@ export const handleGameState = (
 };
 
 export const handleGameEvent = (
-    { gameEvtType, newVal }: GameEvent,
+    { gameEvtType, newVal, result }: GameEvent,
+    logMsg: (msg: string) => void,
     setPkmnLvl: React.Dispatch<React.SetStateAction<number | null>>,
     setPkmnGen: React.Dispatch<React.SetStateAction<Generation | undefined>>,
     setTurnNum: React.Dispatch<React.SetStateAction<number | null>>
@@ -47,13 +48,17 @@ export const handleGameEvent = (
             break;
         case "GENERATION_CHANGE":
             setPkmnGen(getGenerationFromNum(newVal));
+            break;
         case "TURN_CHANGE":
             setTurnNum(newVal);
+            break;
     }
+    logMsg(result.message);
 };
 
 export const handlePlayerEvent = (
-    { playerEvtType, player }: PlayerEvent,
+    { playerEvtType, player, result }: PlayerEvent,
+    logMsg: (msg: string) => void,
     players: Player[],
     setPlayers: React.Dispatch<React.SetStateAction<Player[]>>
 ) => {
@@ -65,15 +70,21 @@ export const handlePlayerEvent = (
     if (playerEvtType === "LEAVE") {
         setPlayers((prev) => prev.filter((p) => p.username !== player.username));
     }
+    logMsg(result.message);
 };
 
-export const handleTurnActionEvent = ({ turnActionEvtTypes, affectedPlayer }: TurnActionEvent) => {
+export const handleTurnActionEvent = (
+    { turnActionEvtTypes, affectedPlayer, result }: TurnActionEvent,
+    logMsg: (msg: string) => void
+) => {
     // TODO
+    logMsg(result.message);
     console.log("Not implemented yet.");
 };
 
 export const handleTurnInfoEvent = (
-    { playerActionOptions }: TurnInfoEvent,
+    { playerActionOptions, result }: TurnInfoEvent,
+    logMsg: (msg: string) => void,
     setPlayerTurnOpts: React.Dispatch<React.SetStateAction<PlayerTurnOption[]>>
 ) => {
     const mappedOptions: PlayerTurnOption[] = Object.entries(playerActionOptions).map(([username, options]) => ({
@@ -81,6 +92,7 @@ export const handleTurnInfoEvent = (
         options,
     }));
     setPlayerTurnOpts(mappedOptions);
+    logMsg(result.message);
 };
 
 const getGenerationFromNum = (num: number): Generation | undefined => {

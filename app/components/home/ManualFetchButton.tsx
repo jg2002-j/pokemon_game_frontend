@@ -24,7 +24,7 @@ function ManualFetchButton({ logMsg, setPkmnLvl, setPkmnGen, setShowdownIcons, s
             }
 
             const gameState: GameState = await response.json();
-            handleGameState(logMsg, gameState, setPkmnLvl, setPkmnGen, setShowdownIcons, setPlayers);
+            handleGameState(gameState, logMsg, setPkmnLvl, setPkmnGen, setShowdownIcons, setPlayers);
         } catch (err: any) {
             console.error(err.message || "Something went wrong");
         }

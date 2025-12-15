@@ -66,16 +66,16 @@ function WebSocketButton({
     const handleEvent = (evt: AnyEvent) => {
         switch (evt.eventType) {
             case "GAME_EVENT":
-                handleGameEvent(evt, setPkmnLvl, setPkmnGen, setTurnNum);
+                handleGameEvent(evt, logMsg, setPkmnLvl, setPkmnGen, setTurnNum);
                 break;
             case "PLAYER_EVENT":
-                handlePlayerEvent(evt, players, setPlayers);
+                handlePlayerEvent(evt, logMsg, players, setPlayers);
                 break;
             case "TURN_ACTION_EVENT":
-                handleTurnActionEvent(evt);
+                handleTurnActionEvent(evt, logMsg);
                 break;
             case "TURN_INFO_EVENT":
-                handleTurnInfoEvent(evt, setPlayerTurnOpts);
+                handleTurnInfoEvent(evt, logMsg, setPlayerTurnOpts);
                 break;
             default:
                 console.log("Unhandled event type");

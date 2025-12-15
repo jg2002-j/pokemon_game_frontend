@@ -77,7 +77,11 @@ export default function Home() {
                         setPlayers={setPlayers}
                     />
                 </div>
-                <div className="flex gap-5">
+                <div className="flex gap-5 select-none">
+                    <div className="flex items-center gap-2">
+                        <span className="font-bold text-lg">Turn</span>
+                        <Badge>{turnNum}</Badge>
+                    </div>
                     <div className="flex items-center gap-2">
                         <span className="font-bold text-lg">Level</span>
                         <Badge>{pkmnLvl}</Badge>
