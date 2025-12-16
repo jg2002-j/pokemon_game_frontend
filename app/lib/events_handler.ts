@@ -1,19 +1,14 @@
+import { useGameContext } from "~/GameContext";
 import type { GameEvent } from "~/types/events/GameEvent";
 import type { PlayerEvent } from "~/types/events/PlayerEvent";
 import type { TurnActionEvent } from "~/types/events/TurnActionEvent";
 import type { TurnInfoEvent } from "~/types/events/TurnInfoEvent";
 import type { GameState } from "~/types/GameState";
 import { type Generation, Generations } from "~/types/Generation";
-import type { Player } from "~/types/Player";
 import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
 
-export const handleGameState = (
-    gameState: GameState,
-    logMsg: (msg: string) => void,
-    setPkmnLvl: React.Dispatch<React.SetStateAction<number | null>>,
-    setPkmnGen: React.Dispatch<React.SetStateAction<Generation | undefined>>,
-    setPlayers: React.Dispatch<React.SetStateAction<Player[]>>
-) => {
+export const handleGameState = (gameState: GameState) => {
+    const { logMsg, setPkmnLvl, setPkmnGen, setPlayers } = useGameContext();
     logMsg(
         "Fetched current gameState -> GEN: [" +
             gameState.pokemonGen +
@@ -33,13 +28,8 @@ export const handleGameState = (
     setPlayers(gameState.allPlayers);
 };
 
-export const handleGameEvent = (
-    { gameEvtType, newVal, result }: GameEvent,
-    logMsg: (msg: string) => void,
-    setPkmnLvl: React.Dispatch<React.SetStateAction<number | null>>,
-    setPkmnGen: React.Dispatch<React.SetStateAction<Generation | undefined>>,
-    setTurnNum: React.Dispatch<React.SetStateAction<number | null>>
-) => {
+export const handleGameEvent = ({ gameEvtType, newVal, result }: GameEvent) => {
+    const { setPkmnLvl, setPkmnGen, setTurnNum, logMsg } = useGameContext();
     switch (gameEvtType) {
         case "LEVEL_CHANGE":
             setPkmnLvl(newVal);
@@ -54,12 +44,8 @@ export const handleGameEvent = (
     logMsg(result.message);
 };
 
-export const handlePlayerEvent = (
-    { playerEvtType, player, result }: PlayerEvent,
-    logMsg: (msg: string) => void,
-    players: Player[],
-    setPlayers: React.Dispatch<React.SetStateAction<Player[]>>
-) => {
+export const handlePlayerEvent = ({ playerEvtType, player, result }: PlayerEvent) => {
+    const { players, setPlayers, logMsg } = useGameContext();
     if (playerEvtType === "JOIN") {
         if (!players.some((p) => p.username === player.username)) {
             setPlayers((prev) => [...prev, player]);
@@ -71,20 +57,15 @@ export const handlePlayerEvent = (
     logMsg(result.message);
 };
 
-export const handleTurnActionEvent = (
-    { turnActionEvtTypes, affectedPlayer, result }: TurnActionEvent,
-    logMsg: (msg: string) => void
-) => {
+export const handleTurnActionEvent = ({ turnActionEvtTypes, affectedPlayer, result }: TurnActionEvent) => {
+    const { logMsg } = useGameContext();
     // TODO
     logMsg(result.message);
     console.log("Not implemented yet.");
 };
 
-export const handleTurnInfoEvent = (
-    { playerActionOptions, result }: TurnInfoEvent,
-    logMsg: (msg: string) => void,
-    setPlayerTurnOpts: React.Dispatch<React.SetStateAction<PlayerTurnOption[]>>
-) => {
+export const handleTurnInfoEvent = ({ playerActionOptions, result }: TurnInfoEvent) => {
+    const { setPlayerTurnOpts, logMsg } = useGameContext();
     const mappedOptions: PlayerTurnOption[] = Object.entries(playerActionOptions).map(([username, options]) => ({
         username,
         options,

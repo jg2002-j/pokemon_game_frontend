@@ -1,24 +1,23 @@
 import { useState } from "react";
-import type { Player } from "~/types/Player";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "../ui/card";
+
 import { Button } from "../ui/button";
-import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "../ui/card";
+
+import type { Player } from "~/types/Player";
 import type { ActionType } from "~/types/events/ActionType";
 
-interface PlayerActionPanelProps {
+interface PlayerActionCardProps {
     player: Player;
     options: ActionType[] | undefined;
 }
 
-function PlayerActionPanel({ player, options }: PlayerActionPanelProps) {
+function PlayerActionCard({ player, options }: PlayerActionCardProps) {
     const [choice, setChoice] = useState<ActionType>("NONE");
 
     const updateChoice = (e: React.MouseEvent<HTMLButtonElement>, val: ActionType) => {
         e.preventDefault();
         setChoice(val);
     };
-
-    console.log(options);
 
     return (
         <Card key={player.username} className="w-full min-w-xs max-w-sm">
@@ -65,4 +64,4 @@ function PlayerActionPanel({ player, options }: PlayerActionPanelProps) {
     );
 }
 
-export default PlayerActionPanel;
+export default PlayerActionCard;

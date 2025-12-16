@@ -1,4 +1,7 @@
-import type { LogMessage } from "~/types/LogMessage";
+import { useGameContext } from "~/GameContext";
+
+import { Logs } from "lucide-react";
+
 import { Button } from "~/components/ui/button";
 import {
     Sheet,
@@ -9,9 +12,9 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "~/components/ui/sheet";
-import { Logs } from "lucide-react";
 
-function LogBoxButton({ msgs }: { msgs: LogMessage[] }) {
+function LogBoxButton() {
+    const { logs } = useGameContext();
     return (
         <div>
             <Sheet>
@@ -25,7 +28,7 @@ function LogBoxButton({ msgs }: { msgs: LogMessage[] }) {
                         <SheetTitle>Log Messages</SheetTitle>
                     </SheetHeader>
                     <div className="px-4 grid grid-cols-6 gap-x-5 gap-y-3 text-xs font-mono">
-                        {msgs.map((msg, i) => (
+                        {logs.map((msg, i) => (
                             <>
                                 <p key={`${i}-timestamp`} className="text-gray-500 col-span-1">
                                     {msg.timestamp}

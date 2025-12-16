@@ -1,15 +1,8 @@
-import { useState } from "react";
+import PlayerActionCard from "./game_section/PlayerActionCard";
+import { useGameContext } from "~/GameContext";
 
-import PlayerActionPanel from "./PlayerActionPanel";
-import type { Player } from "~/types/Player";
-import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
-
-interface GamePanelProps {
-    players: Player[];
-    playerOpts: PlayerTurnOption[];
-}
-
-function GamePanel({ players, playerOpts }: GamePanelProps) {
+function GameSection() {
+    const { players, playerTurnOpts } = useGameContext();
     return (
         <>
             <h1 className="text-7xl font-tanklager font-bold">Game</h1>
@@ -18,9 +11,9 @@ function GamePanel({ players, playerOpts }: GamePanelProps) {
                 <div className="flex flex-col gap-5">
                     <div className="grid grid-cols-5 gap-5">
                         {players?.map((p) => (
-                            <PlayerActionPanel
+                            <PlayerActionCard
                                 player={p}
-                                options={playerOpts.find((opt) => opt.username === p.username)?.options}
+                                options={playerTurnOpts.find((opt) => opt.username === p.username)?.options}
                             />
                         ))}
                     </div>
@@ -30,4 +23,4 @@ function GamePanel({ players, playerOpts }: GamePanelProps) {
     );
 }
 
-export default GamePanel;
+export default GameSection;

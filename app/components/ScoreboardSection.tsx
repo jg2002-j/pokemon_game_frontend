@@ -1,14 +1,11 @@
-import type { Player } from "~/types/Player";
-import PlayerCard from "./PlayerCard";
-import Stats from "./Stats";
+import { useGameContext } from "~/GameContext";
 
-interface ScoreboardProps {
-    players: Player[];
-    team1: Player[];
-    team2: Player[];
-}
+import PlayerCard from "./scoreboard_section/PlayerCard";
+import Stats from "./scoreboard_section/Stats";
 
-export default function Scoreboard({ players, team1, team2 }: ScoreboardProps) {
+function ScoreboardSection() {
+    const { players, team1, team2 } = useGameContext();
+
     return (
         <>
             <h1 className="text-7xl font-tanklager font-bold">Scoreboard</h1>
@@ -38,3 +35,5 @@ export default function Scoreboard({ players, team1, team2 }: ScoreboardProps) {
         </>
     );
 }
+
+export default ScoreboardSection;

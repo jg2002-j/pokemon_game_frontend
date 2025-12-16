@@ -3,6 +3,7 @@ import { Progress } from "~/components/ui/progress";
 
 import type { Player } from "~/types/Player";
 import type { Pokemon } from "~/types/Pokemon";
+import { getSpriteLink } from "~/lib/sprites_handler";
 
 interface PokemonTileProps {
     activePkmn: boolean;
@@ -20,7 +21,7 @@ function PokemonTile({ activePkmn, player, pokemon, index }: PokemonTileProps) {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <div className="flex w-full gap-5 items-center">
-                        <img src={pokemon.spriteLink} alt={pokemon.name} className={sizes} />
+                        <img src={getSpriteLink(pokemon.id)} alt={pokemon.name} className={sizes} />
                         {activePkmn && (
                             <div className="w-full flex flex-col gap-2">
                                 <div className="flex justify-between items-baseline">

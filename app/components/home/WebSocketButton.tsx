@@ -1,34 +1,24 @@
-import { CircleCheck, Unplug } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useGameContext } from "~/GameContext";
+
+import { CircleCheck, Unplug } from "lucide-react";
+
 import { Button } from "~/components/ui/button";
+
+import {
+    handleGameEvent,
+    handlePlayerEvent,
+    handleTurnActionEvent,
+    handleTurnInfoEvent,
+} from "../../lib/events_handler";
+
 import type { GameEvent } from "~/types/events/GameEvent";
 import type { PlayerEvent } from "~/types/events/PlayerEvent";
 import type { TurnActionEvent } from "~/types/events/TurnActionEvent";
 import type { TurnInfoEvent } from "~/types/events/TurnInfoEvent";
-import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
-import { handleGameEvent, handlePlayerEvent, handleTurnActionEvent, handleTurnInfoEvent } from "./HandleEvents";
-import type { Player } from "~/types/Player";
-import type { Generation } from "~/types/Generation";
 
-interface WsBtnProps {
-    logMsg: (msg: string) => void;
-    setPkmnLvl: React.Dispatch<React.SetStateAction<number | null>>;
-    setPkmnGen: React.Dispatch<React.SetStateAction<Generation | undefined>>;
-    players: Player[];
-    setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
-    setPlayerTurnOpts: React.Dispatch<React.SetStateAction<PlayerTurnOption[]>>;
-    setTurnNum: React.Dispatch<React.SetStateAction<number | null>>;
-}
-
-function WebSocketButton({
-    logMsg,
-    setPkmnLvl,
-    setPkmnGen,
-    players,
-    setPlayers,
-    setPlayerTurnOpts,
-    setTurnNum,
-}: WsBtnProps) {
+function WebSocketButton() {
+    const { logMsg } = useGameContext();
     type AnyEvent = GameEvent | PlayerEvent | TurnActionEvent | TurnInfoEvent;
 
     const [connected, setConnected] = useState<boolean>(false);
@@ -71,16 +61,16 @@ function WebSocketButton({
     const handleEvent = (evt: AnyEvent) => {
         switch (evt.eventType) {
             case "GAME_EVENT":
-                handleGameEvent(evt, logMsg, setPkmnLvl, setPkmnGen, setTurnNum);
+                handleGameEvent(evt);
                 break;
             case "PLAYER_EVENT":
-                handlePlayerEvent(evt, logMsg, players, setPlayers);
+                handlePlayerEvent(evt);
                 break;
             case "TURN_ACTION_EVENT":
-                handleTurnActionEvent(evt, logMsg);
+                handleTurnActionEvent(evt);
                 break;
             case "TURN_INFO_EVENT":
-                handleTurnInfoEvent(evt, logMsg, setPlayerTurnOpts);
+                handleTurnInfoEvent(evt);
                 break;
             default:
                 console.log("Unhandled event type");

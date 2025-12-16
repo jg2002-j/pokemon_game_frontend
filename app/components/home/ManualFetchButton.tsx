@@ -1,29 +1,22 @@
 import React from "react";
-import { Button } from "~/components/ui/button";
+
 import { RefreshCcw } from "lucide-react";
+
+import { Button } from "~/components/ui/button";
+
+import { handleGameState } from "../../lib/events_handler";
+
 import type { GameState } from "~/types/GameState";
-import type { PlayerEvent } from "~/types/events/PlayerEvent";
-import { handleGameState } from "./HandleEvents";
-import type { Player } from "~/types/Player";
-import type { Generation } from "~/types/Generation";
 
-interface FetchBtnProps {
-    logMsg: (msg: string) => void;
-    setPkmnLvl: React.Dispatch<React.SetStateAction<number | null>>;
-    setPkmnGen: React.Dispatch<React.SetStateAction<Generation | undefined>>;
-    setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
-}
-
-function ManualFetchButton({ logMsg, setPkmnLvl, setPkmnGen, setPlayers }: FetchBtnProps) {
+function ManualFetchButton() {
     async function manualFetch() {
         try {
             const response = await fetch("/game/currentState");
             if (!response.ok) {
                 console.error(`HTTP error! status: ${response.status}`);
             }
-
             const gameState: GameState = await response.json();
-            handleGameState(gameState, logMsg, setPkmnLvl, setPkmnGen, setPlayers);
+            handleGameState(gameState);
         } catch (err: any) {
             console.error(err.message || "Something went wrong");
         }
