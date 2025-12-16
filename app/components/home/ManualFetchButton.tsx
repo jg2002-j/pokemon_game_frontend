@@ -11,11 +11,10 @@ interface FetchBtnProps {
     logMsg: (msg: string) => void;
     setPkmnLvl: React.Dispatch<React.SetStateAction<number | null>>;
     setPkmnGen: React.Dispatch<React.SetStateAction<Generation | undefined>>;
-    setShowdownIcons: React.Dispatch<React.SetStateAction<boolean>>;
     setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
 }
 
-function ManualFetchButton({ logMsg, setPkmnLvl, setPkmnGen, setShowdownIcons, setPlayers }: FetchBtnProps) {
+function ManualFetchButton({ logMsg, setPkmnLvl, setPkmnGen, setPlayers }: FetchBtnProps) {
     async function manualFetch() {
         try {
             const response = await fetch("/game/currentState");
@@ -24,7 +23,7 @@ function ManualFetchButton({ logMsg, setPkmnLvl, setPkmnGen, setShowdownIcons, s
             }
 
             const gameState: GameState = await response.json();
-            handleGameState(gameState, logMsg, setPkmnLvl, setPkmnGen, setShowdownIcons, setPlayers);
+            handleGameState(gameState, logMsg, setPkmnLvl, setPkmnGen, setPlayers);
         } catch (err: any) {
             console.error(err.message || "Something went wrong");
         }

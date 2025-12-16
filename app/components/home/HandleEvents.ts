@@ -12,7 +12,6 @@ export const handleGameState = (
     logMsg: (msg: string) => void,
     setPkmnLvl: React.Dispatch<React.SetStateAction<number | null>>,
     setPkmnGen: React.Dispatch<React.SetStateAction<Generation | undefined>>,
-    setShowdownIcons: React.Dispatch<React.SetStateAction<boolean>>,
     setPlayers: React.Dispatch<React.SetStateAction<Player[]>>
 ) => {
     logMsg(
@@ -31,7 +30,6 @@ export const handleGameState = (
     );
     setPkmnLvl(gameState.pokemonLevel);
     setPkmnGen(getGenFromName(gameState.pokemonGen));
-    setShowdownIcons(gameState.useShowdownIcons);
     setPlayers(gameState.allPlayers);
 };
 

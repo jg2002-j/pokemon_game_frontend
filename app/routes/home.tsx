@@ -1,21 +1,19 @@
-import { useState, useRef, useEffect, useMemo, useContext } from "react";
+import { useState, useMemo } from "react";
 import type { Route } from "./+types/home";
 
 import WebSocketButton from "~/components/home/WebSocketButton";
 import ManualFetchButton from "~/components/home/ManualFetchButton";
 import LogBoxButton from "~/components/log/LogBoxButton";
 
-import Scoreboard from "~/components/scoreboard/Scoreboard";
+import PreGamePanel from "~/components/game-settings/PreGamePanel";
 import GamePanel from "~/components/game/GamePanel";
+import Scoreboard from "~/components/scoreboard/Scoreboard";
 import { Badge } from "~/components/ui/badge";
 
 import type { LogMessage } from "~/types/LogMessage";
 import type { Player } from "~/types/Player";
 import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
 import type { Generation } from "~/types/Generation";
-import PreGamePanel from "~/components/game-settings/PreGamePanel";
-import { Button } from "~/components/ui/button";
-import { CircleDot } from "lucide-react";
 
 export function meta({}: Route.MetaArgs) {
     return [{ title: "Pokemon Game YAY" }, { name: "Pokemon Game", content: "Welcome to Pokemon Game!" }];
@@ -26,7 +24,6 @@ export default function Home() {
 
     const [pkmnLvl, setPkmnLvl] = useState<number | null>(null);
     const [pkmnGen, setPkmnGen] = useState<Generation | undefined>(undefined);
-    const [showdownIcons, setShowdownIcons] = useState<boolean>(false);
 
     const [turnNum, setTurnNum] = useState<number | null>(null);
 
@@ -70,7 +67,6 @@ export default function Home() {
                         logMsg={logMsg}
                         setPkmnLvl={setPkmnLvl}
                         setPkmnGen={setPkmnGen}
-                        setShowdownIcons={setShowdownIcons}
                         players={players}
                         setPlayers={setPlayers}
                         setPlayerTurnOpts={setPlayerTurnOpts}
@@ -80,7 +76,6 @@ export default function Home() {
                         logMsg={logMsg}
                         setPkmnLvl={setPkmnLvl}
                         setPkmnGen={setPkmnGen}
-                        setShowdownIcons={setShowdownIcons}
                         setPlayers={setPlayers}
                     />
                     <LogBoxButton msgs={logMsgs} />

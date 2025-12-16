@@ -14,7 +14,6 @@ interface WsBtnProps {
     logMsg: (msg: string) => void;
     setPkmnLvl: React.Dispatch<React.SetStateAction<number | null>>;
     setPkmnGen: React.Dispatch<React.SetStateAction<Generation | undefined>>;
-    setShowdownIcons: React.Dispatch<React.SetStateAction<boolean>>;
     players: Player[];
     setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
     setPlayerTurnOpts: React.Dispatch<React.SetStateAction<PlayerTurnOption[]>>;
@@ -25,7 +24,6 @@ function WebSocketButton({
     logMsg,
     setPkmnLvl,
     setPkmnGen,
-    setShowdownIcons,
     players,
     setPlayers,
     setPlayerTurnOpts,
