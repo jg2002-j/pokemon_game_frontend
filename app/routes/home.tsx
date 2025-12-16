@@ -13,6 +13,9 @@ import type { LogMessage } from "~/types/LogMessage";
 import type { Player } from "~/types/Player";
 import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
 import type { Generation } from "~/types/Generation";
+import PreGamePanel from "~/components/game-settings/PreGamePanel";
+import { Button } from "~/components/ui/button";
+import { CircleDot } from "lucide-react";
 
 export function meta({}: Route.MetaArgs) {
     return [{ title: "Pokemon Game YAY" }, { name: "Pokemon Game", content: "Welcome to Pokemon Game!" }];
@@ -57,6 +60,8 @@ export default function Home() {
         setLogMsgs((prev) => [...prev, logEntry]);
     };
 
+    const started = turnNum != null && turnNum > 0;
+
     return (
         <>
             <div className="fixed w-full p-5 flex justify-between items-center gap-5">
@@ -95,9 +100,14 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <div className="p-5 flex flex-col gap-10">
-                <GamePanel players={players} playerOpts={playerTurnOpts} />
-                <Scoreboard players={players} team1={team1} team2={team2} />
+            <div className="p-5 flex flex-col gap-10 pt-24">
+                {!started && <PreGamePanel />}
+                {started && (
+                    <>
+                        <GamePanel players={players} playerOpts={playerTurnOpts} />
+                        <Scoreboard players={players} team1={team1} team2={team2} />
+                    </>
+                )}
             </div>
         </>
     );

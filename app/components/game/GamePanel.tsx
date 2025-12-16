@@ -1,5 +1,5 @@
-import GameSettings from "./GameSettings";
-import JoinLeave from "./JoinLeave";
+import { useState } from "react";
+
 import PlayerActionPanel from "./PlayerActionPanel";
 import type { Player } from "~/types/Player";
 import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
@@ -11,11 +11,9 @@ interface GamePanelProps {
 
 function GamePanel({ players, playerOpts }: GamePanelProps) {
     return (
-        <div>
+        <>
             <h1 className="text-7xl font-tanklager font-bold">Game</h1>
             <div className="flex flex-col gap-5">
-                <GameSettings />
-                <JoinLeave />
                 <h2 className="font-tanklager text-5xl mb-5">Take Turn</h2>
                 <div className="flex flex-col gap-5">
                     <div className="grid grid-cols-5 gap-5">
@@ -28,7 +26,7 @@ function GamePanel({ players, playerOpts }: GamePanelProps) {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

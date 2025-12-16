@@ -1,4 +1,4 @@
-export type GenerationName = "i" | "ii" | "iii" | "iv" | "v" | "vi" | "vii" | "viii" | "ix" | "x";
+export type GenerationName = "i" | "ii" | "iii" | "iv" | "v" | "vi" | "vii" | "viii";
 
 export interface Generation {
     name: GenerationName;
@@ -14,6 +14,4 @@ export const Generations: Record<GenerationName, Generation> = {
     vi: { name: "vi", numericalVal: 6 },
     vii: { name: "vii", numericalVal: 7 },
     viii: { name: "viii", numericalVal: 8 },
-    ix: { name: "ix", numericalVal: 9 },
-    x: { name: "x", numericalVal: 10 },
 };

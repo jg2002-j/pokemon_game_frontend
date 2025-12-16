@@ -1,5 +1,5 @@
-import { Unplug } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { CircleCheck, Unplug } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import type { GameEvent } from "~/types/events/GameEvent";
 import type { PlayerEvent } from "~/types/events/PlayerEvent";
@@ -33,6 +33,7 @@ function WebSocketButton({
 }: WsBtnProps) {
     type AnyEvent = GameEvent | PlayerEvent | TurnActionEvent | TurnInfoEvent;
 
+    const [connected, setConnected] = useState<boolean>(false);
     const websocketRef = useRef<WebSocket | null>(null);
 
     const connectWebSocket = () => {
@@ -44,9 +45,15 @@ function WebSocketButton({
         const ws = new WebSocket("ws://localhost:8080/scoreboard");
         websocketRef.current = ws;
 
-        ws.onopen = () => logMsg("Connected!");
+        ws.onopen = () => {
+            logMsg("Connected!");
+            setConnected(true);
+        };
         ws.onmessage = (event: MessageEvent) => handleWsMessage(event);
-        ws.onclose = () => logMsg("Disconnected");
+        ws.onclose = () => {
+            logMsg("Disconnected");
+            setConnected(false);
+        };
         ws.onerror = (event) => console.error(event);
     };
 
@@ -91,9 +98,15 @@ function WebSocketButton({
 
     return (
         <div>
-            <Button onClick={connectWebSocket}>
-                <Unplug /> Connect Websocket
-            </Button>
+            {connected ? (
+                <Button className="bg-green-400/60">
+                    <CircleCheck /> Connected
+                </Button>
+            ) : (
+                <Button onClick={connectWebSocket}>
+                    <Unplug /> Connect Websocket
+                </Button>
+            )}
         </div>
     );
 }
