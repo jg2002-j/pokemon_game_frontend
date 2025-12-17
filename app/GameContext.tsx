@@ -54,11 +54,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const getSprite = async (pkmnId: number) => {
-        const spriteInfo = PokemonSprites[spriteChoice];
-        if (!spriteInfo || spriteInfo.gen < pkmnGen.numericalVal) {
-            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
-        }
-        return getCroppedSprite(pkmnId, spriteChoice);
+        return getCroppedSprite(pkmnId, spriteChoice, pkmnGen);
     };
 
     const { team1, team2 } = useMemo(() => {

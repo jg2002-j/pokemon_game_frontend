@@ -1,48 +1,46 @@
+import type { Generation } from "~/types/Generation";
 import { PokemonSprites, type PokemonSpriteChoice } from "~/types/PokemonSpriteChoice";
 
-const cache: Record<string, string> = {}; // pkmnId + spriteChoice => cropped data URL
+const spriteCache = new Map<string, string>();
 
-/**
- * Auto-crop transparent pixels and return a uniform sprite
- */
-export const getCroppedSprite = async (pkmnId: number, spriteChoice: PokemonSpriteChoice): Promise<string> => {
-    const cacheKey = `${pkmnId}-${spriteChoice}`;
-    if (cache[cacheKey]) return cache[cacheKey];
+export const getCroppedSprite = async (
+    pkmnId: number,
+    spriteChoice: PokemonSpriteChoice,
+    pkmnGen: Generation
+): Promise<string> => {
+    const cacheKey = `${pkmnId}-${spriteChoice}-${pkmnGen.numericalVal}`;
+    const cached = spriteCache.get(cacheKey);
+    if (cached) return cached;
 
     const spriteInfo = PokemonSprites[spriteChoice];
 
-    let url: string;
-    let isGif = false;
-    let fallback = false;
+    const shouldFallback = !spriteInfo || spriteInfo.gen < pkmnGen.numericalVal;
 
-    if (!spriteInfo) {
-        // Use fallback sprite for older generations
-        url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
-        fallback = true;
-    } else {
-        isGif = spriteChoice === "Black & White (Animated)" || spriteChoice === "Pokémon Showdown";
-        const extension = isGif ? "gif" : "png";
-        url = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteInfo.path}/${pkmnId}.${extension}`;
-    }
+    const url = shouldFallback ? getFallback(pkmnId) : buildSpriteUrl(pkmnId, spriteInfo.path, spriteInfo.animated);
 
     try {
+        if (spriteInfo.animated || shouldFallback) {
+            spriteCache.set(cacheKey, url);
+            return url;
+        }
+
         const img = await loadImage(url);
-        const croppedDataUrl = cropTransparentPixels(img);
+        const cropped = cropTransparentPixels(img);
 
-        // Cache normally, but if this is a fallback, use a special key
-        const finalCacheKey = fallback ? `${pkmnId}-fallback` : cacheKey;
-        cache[finalCacheKey] = croppedDataUrl;
-
-        return croppedDataUrl;
+        spriteCache.set(cacheKey, cropped);
+        return cropped;
     } catch {
-        // If even the fallback fails, just return the original URL
-        return url;
+        const fallback = getFallback(pkmnId);
+        spriteCache.set(cacheKey, fallback);
+        return fallback;
     }
 };
 
-// Fallback if sprite fails or is invalid
+const buildSpriteUrl = (pkmnId: number, path: string, animated: boolean) =>
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${path}/${pkmnId}.${animated ? "gif" : "png"}`;
+
 const getFallback = (pkmnId: number) =>
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pkmnId}.gif`;
 
 // Load image as HTMLImageElement
 const loadImage = (src: string): Promise<HTMLImageElement> =>
@@ -62,8 +60,10 @@ const cropTransparentPixels = (img: HTMLImageElement): string => {
     canvas.height = img.height;
     ctx.drawImage(img, 0, 0);
 
-    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const { data, width, height } = imgData;
+    const { data, width, height } = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    // Use a Uint32 view for faster alpha checks
+    const pixels32 = new Uint32Array(data.buffer);
 
     let top = height,
         left = width,
@@ -72,7 +72,8 @@ const cropTransparentPixels = (img: HTMLImageElement): string => {
 
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            const alpha = data[(y * width + x) * 4 + 3];
+            const pixel = pixels32[y * width + x];
+            const alpha = pixel >>> 24; // highest byte is alpha in little-endian
             if (alpha !== 0) {
                 if (x < left) left = x;
                 if (x > right) right = x;
@@ -84,7 +85,6 @@ const cropTransparentPixels = (img: HTMLImageElement): string => {
 
     const cropWidth = right - left + 1;
     const cropHeight = bottom - top + 1;
-
     if (cropWidth <= 0 || cropHeight <= 0) return img.src;
 
     const cropCanvas = document.createElement("canvas");
