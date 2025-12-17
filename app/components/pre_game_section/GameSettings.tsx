@@ -1,10 +1,9 @@
 import React, { useState } from "react";
+
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
-import { Label } from "~/components/ui/label";
-import { Switch } from "~/components/ui/switch";
 
 import { Generations } from "~/types/Generation";
 
@@ -21,7 +20,7 @@ function GameSettings({ setSettingsDone, genChoice, setGenChoice }: GameSettings
     const submitSettings = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await fetch("/settings/update", {
+            await fetch("clapped/settings/update", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -59,7 +58,7 @@ function GameSettings({ setSettingsDone, genChoice, setGenChoice }: GameSettings
                     <Card className="w-full min-w-xs max-w-sm">
                         <CardHeader>
                             <CardTitle className="font-tanklager text-4xl">Set Pokémon Generation</CardTitle>
-                            <CardDescription className="font-pokemon">Choose between I and VIII</CardDescription>
+                            <CardDescription className="font-pokemon">Choose between I and VIII.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Select value={genChoice?.toString()} onValueChange={(val) => setGenChoice(Number(val))}>
@@ -76,18 +75,6 @@ function GameSettings({ setSettingsDone, genChoice, setGenChoice }: GameSettings
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-                        </CardContent>
-                        <CardFooter className="flex gap-2"></CardFooter>
-                    </Card>
-                    <Card className="w-full min-w-xs max-w-sm">
-                        <CardHeader>
-                            <CardTitle className="font-tanklager text-4xl">Use Pokémon Showdown Icons</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center space-x-2">
-                                <Switch id="showdownIcons" checked={iconsChoice} onCheckedChange={setIconsChoice} />
-                                <Label htmlFor="showdownIcons">Use Showdown Icons</Label>
-                            </div>
                         </CardContent>
                         <CardFooter className="flex gap-2"></CardFooter>
                     </Card>

@@ -1,21 +1,23 @@
 import { type ReactNode, useState, useContext, createContext, useMemo } from "react";
-import type { Generation } from "./types/Generation";
+import { Generations, type Generation } from "./types/Generation";
 import type { LogMessage } from "./types/LogMessage";
 import type { Player } from "./types/Player";
 import type { PlayerTurnOption } from "./types/PlayerTurnOptions";
+import { PokemonSprites, type PokemonSpriteChoice } from "./types/PokemonSpriteChoice";
 
 interface GameContextType {
     logs: LogMessage[];
     logMsg: (msg: string) => void;
 
-    pkmnLvl: number | null;
-    setPkmnLvl: React.Dispatch<React.SetStateAction<number | null>>;
+    pkmnLvl: number;
+    setPkmnLvl: React.Dispatch<React.SetStateAction<number>>;
 
-    pkmnGen: Generation | undefined;
-    setPkmnGen: React.Dispatch<React.SetStateAction<Generation | undefined>>;
+    pkmnGen: Generation;
+    setPkmnGen: React.Dispatch<React.SetStateAction<Generation>>;
 
     spriteChoice: PokemonSpriteChoice;
     setSpriteChoice: React.Dispatch<React.SetStateAction<PokemonSpriteChoice>>;
+    getSpriteLink: (pkmnId: number) => string;
 
     turnNum: number | null;
     setTurnNum: React.Dispatch<React.SetStateAction<number | null>>;
@@ -35,8 +37,8 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 export const GameProvider = ({ children }: { children: ReactNode }) => {
     const [logs, setLogs] = useState<LogMessage[]>([]);
 
-    const [pkmnLvl, setPkmnLvl] = useState<number | null>(null);
-    const [pkmnGen, setPkmnGen] = useState<Generation | undefined>(undefined);
+    const [pkmnLvl, setPkmnLvl] = useState<number>(50);
+    const [pkmnGen, setPkmnGen] = useState<Generation>(Generations.v);
     const [spriteChoice, setSpriteChoice] = useState<PokemonSpriteChoice>("Black & White (Animated)");
 
     const [turnNum, setTurnNum] = useState<number | null>(null);
@@ -48,6 +50,22 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         const timestamp = new Date().toLocaleTimeString();
         const logEntry: LogMessage = { timestamp, message: msg };
         setLogs((prev) => [...prev, logEntry]);
+    };
+
+    const getSpriteLink = (pkmnId: number): string => {
+        const spriteInfo = PokemonSprites[spriteChoice as PokemonSpriteChoice];
+        if (!spriteInfo) {
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
+        }
+
+        if (!pkmnGen || spriteInfo.gen < pkmnGen.numericalVal) {
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
+        }
+
+        const isGif = spriteChoice === "Black & White (Animated)" || spriteChoice === "Pokémon Showdown";
+        const extension = isGif ? "gif" : "png";
+
+        return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteInfo.path}/${pkmnId}.${extension}`;
     };
 
     const { team1, team2 } = useMemo(() => {
@@ -81,6 +99,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                 setPkmnGen,
                 spriteChoice,
                 setSpriteChoice,
+                getSpriteLink,
                 turnNum,
                 setTurnNum,
                 players,

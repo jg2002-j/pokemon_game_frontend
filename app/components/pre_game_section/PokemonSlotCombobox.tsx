@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useGameContext } from "~/GameContext";
 
 import { cn } from "~/lib/utils";
 
@@ -7,7 +8,6 @@ import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "~/components/ui/command";
-import { getSpriteLink } from "~/lib/sprites_handler";
 
 import type { SimplePokemonDto } from "~/types/SimplePokemonDto";
 
@@ -16,6 +16,7 @@ interface PokemonSlotComboboxProps {
 }
 
 function PokemonSlotCombobox({ pokeOptions }: PokemonSlotComboboxProps) {
+    const { getSpriteLink } = useGameContext();
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState("");
     return (
@@ -47,8 +48,10 @@ function PokemonSlotCombobox({ pokeOptions }: PokemonSlotComboboxProps) {
                                             setOpen(false);
                                         }}
                                     >
-                                        <img src={getSpriteLink(p.id)} alt={p.name} className="h-8 w-8" />{" "}
-                                        <span className="text-xs">{p.name}</span>
+                                        <div className="flex gap-3 items-center">
+                                            <img src={getSpriteLink(p.id)} alt={p.name} className="h-6 w-6" />
+                                            <span className="text-xs">{p.name}</span>
+                                        </div>
                                         <CheckIcon
                                             className={cn("ml-auto", value === p.name ? "opacity-100" : "opacity-0")}
                                         />

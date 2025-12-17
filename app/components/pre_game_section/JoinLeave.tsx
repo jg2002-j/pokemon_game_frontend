@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/componen
 
 import PokemonSlotCombobox from "./PokemonSlotCombobox";
 import type { SimplePokemonDto } from "~/types/SimplePokemonDto";
+import { useGameContext } from "~/GameContext";
 
 interface JoinLeaveProps {
     genChoice: number;
@@ -20,6 +21,7 @@ interface PlayerDto {
 }
 
 function JoinLeave({ genChoice }: JoinLeaveProps) {
+    const { pkmnGen } = useGameContext();
     const blankPlayer: PlayerDto = {
         username: "",
         teamNum: 1,
@@ -31,7 +33,7 @@ function JoinLeave({ genChoice }: JoinLeaveProps) {
     const addNewPlayer = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await fetch("/player/join", {
+            await fetch("clapped/player/join", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: "",
@@ -45,12 +47,12 @@ function JoinLeave({ genChoice }: JoinLeaveProps) {
     useEffect(() => {
         const fetchAllPokemon = async () => {
             try {
-                const response = await fetch("/player/join", {
-                    method: "POST",
+                const response = await fetch("clapped/pokemon/validForGen/" + pkmnGen.numericalVal, {
+                    method: "GET",
                     headers: { "Content-Type": "application/json" },
-                    body: "",
                 });
                 const allPkmn: SimplePokemonDto[] = await response.json();
+                console.log(allPkmn);
                 setPokeOptions(allPkmn);
             } catch (err) {
                 console.error(err);

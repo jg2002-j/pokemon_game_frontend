@@ -1,7 +1,6 @@
 import type { Route } from "./+types/home";
 
 import WebSocketButton from "~/components/home/WebSocketButton";
-import ManualFetchButton from "~/components/home/ManualFetchButton";
 import LogBoxButton from "~/components/home/LogBoxButton";
 
 import PreGameSection from "~/components/PreGameSection";
@@ -11,6 +10,7 @@ import Scoreboard from "~/components/ScoreboardSection";
 import { Badge } from "~/components/ui/badge";
 
 import { useGameContext } from "~/GameContext";
+import SpriteSelector from "~/components/home/SpriteSelector";
 
 export function meta({}: Route.MetaArgs) {
     return [{ title: "Pokemon Game YAY" }, { name: "Pokemon Game", content: "Welcome to Pokemon Game!" }];
@@ -25,7 +25,6 @@ export default function Home() {
             <div className="fixed w-full p-5 flex justify-between items-center gap-5">
                 <div className="flex gap-5">
                     <WebSocketButton />
-                    <ManualFetchButton />
                     <LogBoxButton />
                 </div>
                 <div className="flex gap-5 select-none">
@@ -41,6 +40,7 @@ export default function Home() {
                         <span className="font-bold text-lg">Generation</span>
                         <Badge>{pkmnGen?.name.toUpperCase()}</Badge>
                     </div>
+                    <SpriteSelector />
                 </div>
             </div>
             <div className="p-5 flex flex-col gap-10 pt-24">

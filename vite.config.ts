@@ -7,11 +7,7 @@ export default defineConfig({
     plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
     server: {
         proxy: {
-            "/game": {
-                target: "http://localhost:8080",
-                changeOrigin: true,
-            },
-            "/settings": {
+            "/clapped": {
                 target: "http://localhost:8080",
                 changeOrigin: true,
             },

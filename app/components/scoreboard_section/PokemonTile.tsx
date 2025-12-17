@@ -1,9 +1,10 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { useGameContext } from "~/GameContext";
+
 import { Progress } from "~/components/ui/progress";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 
 import type { Player } from "~/types/Player";
 import type { Pokemon } from "~/types/Pokemon";
-import { getSpriteLink } from "~/lib/sprites_handler";
 
 interface PokemonTileProps {
     activePkmn: boolean;
@@ -13,6 +14,7 @@ interface PokemonTileProps {
 }
 
 function PokemonTile({ activePkmn, player, pokemon, index }: PokemonTileProps) {
+    const { getSpriteLink } = useGameContext();
     const sizes = activePkmn ? "w-16 h-16" : "w-8 h-8";
     const hpPercent = Math.max(0, Math.min(100, (pokemon.currentHp / pokemon.baseStats.HP) * 100));
 
