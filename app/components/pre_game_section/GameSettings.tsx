@@ -5,17 +5,15 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 
-import { Generations } from "~/types/Generation";
+import { Generations, type Generation, type GenerationName } from "~/types/Generation";
+import { useGameContext } from "~/GameContext";
 
 interface GameSettingsProps {
     setSettingsDone: React.Dispatch<React.SetStateAction<boolean>>;
-    genChoice: number;
-    setGenChoice: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function GameSettings({ setSettingsDone, genChoice, setGenChoice }: GameSettingsProps) {
-    const [lvlChoice, setLvlChoice] = useState<number>(50);
-    const [iconsChoice, setIconsChoice] = useState<boolean>(false);
+function GameSettings({ setSettingsDone }: GameSettingsProps) {
+    const { pkmnLvl, setPkmnLvl, pkmnGen, setPkmnGen } = useGameContext();
 
     const submitSettings = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -24,9 +22,8 @@ function GameSettings({ setSettingsDone, genChoice, setGenChoice }: GameSettings
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    level: lvlChoice,
-                    gen: genChoice,
-                    useShowdownIcons: iconsChoice,
+                    level: pkmnLvl,
+                    gen: pkmnGen,
                 }),
             });
             setSettingsDone(true);
@@ -49,8 +46,8 @@ function GameSettings({ setSettingsDone, genChoice, setGenChoice }: GameSettings
                                 type="number"
                                 min={10}
                                 max={100}
-                                value={lvlChoice}
-                                onChange={(e) => setLvlChoice(Number(e.target.value))}
+                                value={pkmnLvl}
+                                onChange={(e) => setPkmnLvl(Number(e.target.value))}
                             />
                         </CardContent>
                         <CardFooter className="flex gap-2"></CardFooter>
@@ -61,14 +58,20 @@ function GameSettings({ setSettingsDone, genChoice, setGenChoice }: GameSettings
                             <CardDescription className="font-pokemon">Choose between I and VIII.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Select value={genChoice?.toString()} onValueChange={(val) => setGenChoice(Number(val))}>
+                            <Select
+                                value={pkmnGen?.name}
+                                onValueChange={(val) => {
+                                    const key = val as GenerationName;
+                                    setPkmnGen(Generations[key]);
+                                }}
+                            >
                                 <SelectTrigger className="w-45">
                                     <SelectValue placeholder="Select a generation" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
                                         {Object.values(Generations).map((g) => (
-                                            <SelectItem key={g.name} value={String(g.numericalVal)}>
+                                            <SelectItem key={g.name} value={g.name}>
                                                 {g.name.toUpperCase()}
                                             </SelectItem>
                                         ))}

@@ -16,7 +16,8 @@ interface PokemonSlotComboboxProps {
 }
 
 function PokemonSlotCombobox({ pokeOptions }: PokemonSlotComboboxProps) {
-    const { getSpriteLink } = useGameContext();
+    const { getSprite } = useGameContext();
+
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState("");
     return (
@@ -39,24 +40,30 @@ function PokemonSlotCombobox({ pokeOptions }: PokemonSlotComboboxProps) {
                         <CommandList className="p-1">
                             <CommandEmpty>No Pokémon found.</CommandEmpty>
                             <CommandGroup>
-                                {pokeOptions.map((p) => (
-                                    <CommandItem
-                                        key={p.name}
-                                        value={p.name}
-                                        onSelect={(currentValue) => {
-                                            setValue(currentValue === value ? "" : currentValue);
-                                            setOpen(false);
-                                        }}
-                                    >
-                                        <div className="flex gap-3 items-center">
-                                            <img src={getSpriteLink(p.id)} alt={p.name} className="h-6 w-6" />
-                                            <span className="text-xs">{p.name}</span>
-                                        </div>
-                                        <CheckIcon
-                                            className={cn("ml-auto", value === p.name ? "opacity-100" : "opacity-0")}
-                                        />
-                                    </CommandItem>
-                                ))}
+                                {pokeOptions
+                                    .slice()
+                                    .sort((a, b) => a.id - b.id)
+                                    .map((p) => (
+                                        <CommandItem
+                                            key={p.name}
+                                            value={p.name}
+                                            onSelect={(currentValue) => {
+                                                setValue(currentValue === value ? "" : currentValue);
+                                                setOpen(false);
+                                            }}
+                                        >
+                                            <div className="flex gap-3 items-center">
+                                                {/* <img src={null} alt={p.name} className="h-6 w-6" /> */}
+                                                <span className="text-xs">{p.name}</span>
+                                            </div>
+                                            <CheckIcon
+                                                className={cn(
+                                                    "ml-auto",
+                                                    value === p.name ? "opacity-100" : "opacity-0"
+                                                )}
+                                            />
+                                        </CommandItem>
+                                    ))}
                             </CommandGroup>
                         </CommandList>
                     </Command>

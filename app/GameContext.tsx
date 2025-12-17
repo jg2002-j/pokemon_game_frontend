@@ -4,6 +4,7 @@ import type { LogMessage } from "./types/LogMessage";
 import type { Player } from "./types/Player";
 import type { PlayerTurnOption } from "./types/PlayerTurnOptions";
 import { PokemonSprites, type PokemonSpriteChoice } from "./types/PokemonSpriteChoice";
+import { getCroppedSprite } from "./lib/sprites";
 
 interface GameContextType {
     logs: LogMessage[];
@@ -17,7 +18,7 @@ interface GameContextType {
 
     spriteChoice: PokemonSpriteChoice;
     setSpriteChoice: React.Dispatch<React.SetStateAction<PokemonSpriteChoice>>;
-    getSpriteLink: (pkmnId: number) => string;
+    getSprite: (pkmnId: number) => Promise<string>;
 
     turnNum: number | null;
     setTurnNum: React.Dispatch<React.SetStateAction<number | null>>;
@@ -52,21 +53,13 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         setLogs((prev) => [...prev, logEntry]);
     };
 
-    const getSpriteLink = useCallback(
-        (pkmnId: number): string => {
-            const spriteInfo = PokemonSprites[spriteChoice];
-
-            if (!spriteInfo || spriteInfo.gen < pkmnGen.numericalVal) {
-                return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
-            }
-
-            const isGif = spriteChoice === "Black & White (Animated)" || spriteChoice === "Pokémon Showdown";
-            const extension = isGif ? "gif" : "png";
-
-            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteInfo.path}/${pkmnId}.${extension}`;
-        },
-        [spriteChoice, pkmnGen]
-    );
+    const getSprite = async (pkmnId: number) => {
+        const spriteInfo = PokemonSprites[spriteChoice];
+        if (!spriteInfo || spriteInfo.gen < pkmnGen.numericalVal) {
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
+        }
+        return getCroppedSprite(pkmnId, spriteChoice);
+    };
 
     const { team1, team2 } = useMemo(() => {
         const t1: Player[] = [];
@@ -99,7 +92,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                 setPkmnGen,
                 spriteChoice,
                 setSpriteChoice,
-                getSpriteLink,
+                getSprite,
                 turnNum,
                 setTurnNum,
                 players,

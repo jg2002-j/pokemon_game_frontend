@@ -3,18 +3,19 @@ import { useGameContext } from "~/GameContext";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 
 import { PokemonSpriteChoices, type PokemonSpriteChoice } from "~/types/PokemonSpriteChoice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function SpriteSelector() {
-    const { spriteChoice, setSpriteChoice, getSpriteLink } = useGameContext();
+    const { spriteChoice, setSpriteChoice, getSprite } = useGameContext();
+    const [spriteLink, setSpriteLink] = useState<string>("");
 
     useEffect(() => {
-        console.log(spriteChoice);
-    }, [spriteChoice]);
+        getSprite(25).then(setSpriteLink);
+    }, [getSprite, spriteChoice]);
 
     return (
         <div className="flex gap-3 items-center">
-            <img src={getSpriteLink(25)} alt="Sprite visualisation" className="max-h-8" />
+            <img src={spriteLink} alt="Sprite visualisation" className="max-h-8" />
             <Select
                 value={spriteChoice?.toString()}
                 onValueChange={(val) => setSpriteChoice(val as PokemonSpriteChoice)}

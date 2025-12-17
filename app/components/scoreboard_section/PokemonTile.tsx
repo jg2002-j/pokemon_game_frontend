@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useGameContext } from "~/GameContext";
 
 import { Progress } from "~/components/ui/progress";
@@ -14,16 +15,21 @@ interface PokemonTileProps {
 }
 
 function PokemonTile({ activePkmn, player, pokemon, index }: PokemonTileProps) {
-    const { getSpriteLink } = useGameContext();
+    const { getSprite } = useGameContext();
+    const [sprite, setSprite] = useState<string>("");
     const sizes = activePkmn ? "w-16 h-16" : "w-8 h-8";
     const hpPercent = Math.max(0, Math.min(100, (pokemon.currentHp / pokemon.baseStats.HP) * 100));
+
+    useEffect(() => {
+        getSprite(pokemon.id).then(setSprite);
+    }, [getSprite]);
 
     return (
         <TooltipProvider key={`${player.username}-${pokemon.id}-${index}`}>
             <Tooltip>
                 <TooltipTrigger asChild>
                     <div className="flex w-full gap-5 items-center">
-                        <img src={getSpriteLink(pokemon.id)} alt={pokemon.name} className={sizes} />
+                        <img src={sprite} alt={pokemon.name} className={sizes} />
                         {activePkmn && (
                             <div className="w-full flex flex-col gap-2">
                                 <div className="flex justify-between items-baseline">
