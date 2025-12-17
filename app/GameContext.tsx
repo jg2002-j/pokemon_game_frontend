@@ -1,4 +1,4 @@
-import { type ReactNode, useState, useContext, createContext, useMemo } from "react";
+import { type ReactNode, useState, useContext, createContext, useMemo, useCallback } from "react";
 import { Generations, type Generation } from "./types/Generation";
 import type { LogMessage } from "./types/LogMessage";
 import type { Player } from "./types/Player";
@@ -52,21 +52,21 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         setLogs((prev) => [...prev, logEntry]);
     };
 
-    const getSpriteLink = (pkmnId: number): string => {
-        const spriteInfo = PokemonSprites[spriteChoice as PokemonSpriteChoice];
-        if (!spriteInfo) {
-            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
-        }
+    const getSpriteLink = useCallback(
+        (pkmnId: number): string => {
+            const spriteInfo = PokemonSprites[spriteChoice];
 
-        if (!pkmnGen || spriteInfo.gen < pkmnGen.numericalVal) {
-            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
-        }
+            if (!spriteInfo || spriteInfo.gen < pkmnGen.numericalVal) {
+                return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pkmnId}.png`;
+            }
 
-        const isGif = spriteChoice === "Black & White (Animated)" || spriteChoice === "Pokémon Showdown";
-        const extension = isGif ? "gif" : "png";
+            const isGif = spriteChoice === "Black & White (Animated)" || spriteChoice === "Pokémon Showdown";
+            const extension = isGif ? "gif" : "png";
 
-        return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteInfo.path}/${pkmnId}.${extension}`;
-    };
+            return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${spriteInfo.path}/${pkmnId}.${extension}`;
+        },
+        [spriteChoice, pkmnGen]
+    );
 
     const { team1, team2 } = useMemo(() => {
         const t1: Player[] = [];
