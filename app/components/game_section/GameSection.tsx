@@ -1,4 +1,4 @@
-import PlayerActionCard from "./game_section/PlayerActionCard";
+import PlayerActionCard from "./PlayerActionCard";
 import { useGameContext } from "~/GameContext";
 
 function GameSection() {

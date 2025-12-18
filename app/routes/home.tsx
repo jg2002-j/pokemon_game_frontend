@@ -1,16 +1,18 @@
 import type { Route } from "./+types/home";
+import { useState } from "react";
+import { useGameContext } from "~/GameContext";
 
 import WebSocketButton from "~/components/home/WebSocketButton";
 import LogBoxButton from "~/components/home/LogBoxButton";
 
-import PreGameSection from "~/components/PreGameSection";
-import GameSection from "~/components/GameSection";
+import SpriteSelector from "~/components/home/SpriteSelector";
+
+import GameSettings from "~/components/pre_game_section/GameSettings";
+import JoinLeave from "~/components/pre_game_section/JoinLeave";
 import Scoreboard from "~/components/ScoreboardSection";
 
 import { Badge } from "~/components/ui/badge";
-
-import { useGameContext } from "~/GameContext";
-import SpriteSelector from "~/components/home/SpriteSelector";
+import GameSection from "~/components/game_section/GameSection";
 
 export function meta({}: Route.MetaArgs) {
     return [{ title: "Pokemon Game YAY" }, { name: "Pokemon Game", content: "Welcome to Pokemon Game!" }];
@@ -19,6 +21,8 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
     const { pkmnLvl, pkmnGen, turnNum } = useGameContext();
     const started = turnNum != null && turnNum > 0;
+
+    const [settingsDone, setSettingsDone] = useState<boolean>(false);
 
     return (
         <>
@@ -44,13 +48,10 @@ export default function Home() {
                 </div>
             </div>
             <div className="p-5 flex flex-col gap-10 pt-24">
-                {!started && <PreGameSection />}
-                {started && (
-                    <>
-                        <GameSection />
-                        <Scoreboard />
-                    </>
-                )}
+                <GameSettings />
+                <JoinLeave />
+                <GameSection />
+                <Scoreboard />
             </div>
         </>
     );

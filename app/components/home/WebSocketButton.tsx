@@ -12,6 +12,7 @@ import {
     handleTurnInfoEvent,
 } from "../../lib/events_handler";
 
+import { toast } from "sonner";
 import type { GameEvent } from "~/types/events/GameEvent";
 import type { PlayerEvent } from "~/types/events/PlayerEvent";
 import type { TurnActionEvent } from "~/types/events/TurnActionEvent";
@@ -26,7 +27,7 @@ function WebSocketButton() {
 
     const connectWebSocket = () => {
         if (websocketRef.current && websocketRef.current.readyState === WebSocket.OPEN) {
-            logMsg("Already connected!");
+            logMsg("Already connected to server!");
             return;
         }
 
@@ -34,12 +35,14 @@ function WebSocketButton() {
         websocketRef.current = ws;
 
         ws.onopen = () => {
-            logMsg("Connected!");
+            logMsg("Connected to server!");
+            toast.success("Connected to server!");
             setConnected(true);
         };
         ws.onmessage = (event: MessageEvent) => handleWsMessage(event);
         ws.onclose = () => {
-            logMsg("Disconnected");
+            logMsg("Disconnected from server!");
+            toast.warning("Disconnected from server!");
             setConnected(false);
         };
         ws.onerror = (event) => console.error(event);
@@ -49,6 +52,7 @@ function WebSocketButton() {
         const data = JSON.parse(event.data) as unknown;
         if (!isEvent(data)) {
             console.error("Invalid event payload", data);
+            toast.warning("Received malformed payload from server.");
             return;
         }
         handleEvent(data);

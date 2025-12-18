@@ -29,7 +29,7 @@ interface SpriteInfo {
 
 export const PokemonSprites: Record<PokemonSpriteChoice, SpriteInfo> = {
     "Pokémon Showdown": {
-        gen: 8,
+        gen: 0,
         path: "other/showdown",
         animated: true,
     },
@@ -89,7 +89,7 @@ export const PokemonSprites: Record<PokemonSpriteChoice, SpriteInfo> = {
         animated: false,
     },
     "Black & White": {
-        gen: 5,
+        gen: 0,
         path: "versions/generation-v/black-white",
         animated: false,
     },

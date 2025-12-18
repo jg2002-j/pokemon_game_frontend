@@ -1,77 +1,65 @@
 import React, { useEffect, useState } from "react";
+import { useGameContext } from "~/GameContext";
+import { toast } from "sonner";
 
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 
-import PokemonSlotCombobox from "./PokemonSlotCombobox";
-import type { SimplePokemonDto } from "~/types/SimplePokemonDto";
-import { useGameContext } from "~/GameContext";
+import NewPokemonBox from "./NewPokemonBox";
 
-interface JoinLeaveProps {
-    genChoice: number;
-}
+import type { SimplePokemonDto } from "~/components/pre_game_section/types/SimplePokemonDto";
+import type { PlayerDto } from "./types/PlayerDto";
 
-interface PlayerDto {
-    username: string;
-    teamNum: 1 | 2;
-    pkmnTeam: [string, string, string, string, string, string];
-}
-
-function JoinLeave({ genChoice }: JoinLeaveProps) {
+function JoinLeave() {
     const { pkmnGen } = useGameContext();
     const blankPlayer: PlayerDto = {
         username: "",
         teamNum: 1,
         pkmnTeam: ["", "", "", "", "", ""],
     };
-    const [newPlayer, setNewPlayer] = useState<PlayerDto>(blankPlayer);
+    const [player, setPlayer] = useState<PlayerDto>(blankPlayer);
     const [pokeOptions, setPokeOptions] = useState<SimplePokemonDto[]>([]);
 
     const addNewPlayer = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await fetch("clapped/player/join", {
+            const res = await fetch("/clapped/player/join", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: "",
+                body: JSON.stringify(player),
             });
-            setNewPlayer(blankPlayer);
+            if (!res.ok) {
+                throw new Error();
+            }
+            toast.success(`Added new player to game: ${player.username}`);
+            setPlayer(blankPlayer);
         } catch (err) {
             console.error(err);
+            toast.error("Error saving player to game, please try again.");
         }
     };
 
     useEffect(() => {
         const fetchAllPokemon = async () => {
             try {
-                const response = await fetch("clapped/pokemon/validForGen/" + pkmnGen.numericalVal, {
+                const response = await fetch("/clapped/pokemon/validForGen/" + pkmnGen.numericalVal, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                 });
                 const allPkmn: SimplePokemonDto[] = await response.json();
-                console.log(allPkmn);
                 setPokeOptions(allPkmn);
             } catch (err) {
                 console.error(err);
             }
         };
         fetchAllPokemon();
-    }, [genChoice]);
-
-    useEffect(() => {
-        console.log(pokeOptions);
-    }, [pokeOptions]);
-
-    useEffect(() => {
-        console.log(newPlayer);
-    }, [newPlayer]);
+    }, [pkmnGen]);
 
     return (
         <div>
-            <h2 className="font-tanklager text-5xl mb-5">Players</h2>
+            <h2 className="font-tanklager text-5xl mb-5">Player Management</h2>
             <div className="flex gap-5 items-center">
                 <form onSubmit={addNewPlayer} className="flex gap-5">
                     <Card className="w-full min-w-xs max-w-sm">
@@ -83,16 +71,16 @@ function JoinLeave({ genChoice }: JoinLeaveProps) {
                                 <Label>Username</Label>
                                 <Input
                                     type="text"
-                                    value={newPlayer?.username}
-                                    onChange={(e) => setNewPlayer({ ...newPlayer, username: e.target.value })}
+                                    value={player?.username}
+                                    onChange={(e) => setPlayer({ ...player, username: e.target.value })}
                                 />
                             </div>
                             <div className="flex flex-col gap-2 items-start">
                                 <Label>Team</Label>
                                 <RadioGroup
-                                    defaultValue={newPlayer.teamNum.toString()}
+                                    defaultValue={player.teamNum.toString()}
                                     onValueChange={(value) =>
-                                        setNewPlayer({ ...newPlayer!, teamNum: Number(value) as 1 | 2 })
+                                        setPlayer({ ...player!, teamNum: Number(value) as 1 | 2 })
                                     }
                                 >
                                     <div className="flex items-center space-x-2">
@@ -112,14 +100,13 @@ function JoinLeave({ genChoice }: JoinLeaveProps) {
                         <CardHeader>
                             <CardTitle className="font-tanklager text-4xl">Choose Pokémon Team</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex flex-col gap-5 items-stretch">
-                            <div className="flex gap-3">
-                                <Avatar>
-                                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                                    <AvatarFallback>CN</AvatarFallback>
-                                </Avatar>
+                        <CardContent className="grid grid-cols-2 items-stretch">
+                            <div className="flex flex-col gap-2 items-start">
+                                {player.pkmnTeam.map((p) => (
+                                    <div>{p}</div>
+                                ))}
                             </div>
-                            <PokemonSlotCombobox pokeOptions={pokeOptions} />
+                            <NewPokemonBox pokeOptions={pokeOptions} player={player} setPlayer={setPlayer} />
                         </CardContent>
                         <CardFooter className="flex gap-2"></CardFooter>
                     </Card>

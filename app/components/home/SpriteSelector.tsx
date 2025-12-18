@@ -2,12 +2,34 @@ import { useGameContext } from "~/GameContext";
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 
-import { PokemonSpriteChoices, type PokemonSpriteChoice } from "~/types/PokemonSpriteChoice";
+import { PokemonSpriteChoices, PokemonSprites, type PokemonSpriteChoice } from "~/types/Sprites";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import type { Generation } from "~/types/Generation";
+import { checkSpriteOptionIsValidForGen } from "~/lib/sprites";
 
 function SpriteSelector() {
-    const { spriteChoice, setSpriteChoice, getSprite } = useGameContext();
-    const [spriteLink, setSpriteLink] = useState<string>("");
+    const { spriteChoice, setSpriteChoice, getSprite, pkmnGen, logMsg } = useGameContext();
+    const [spriteLink, setSpriteLink] = useState<string | null>(null);
+
+    const updateSpriteChoice = (val: PokemonSpriteChoice) => {
+        if (checkSpriteOptionIsValidForGen(val, pkmnGen)) {
+            setSpriteChoice(val);
+            toast.success("Pokémon sprites updated to use " + spriteChoice);
+        } else {
+            toast.error(
+                "This isn't a valid choice. Please choose a game that is in Generation " +
+                    pkmnGen.name.toUpperCase() +
+                    " or later."
+            );
+        }
+    };
+
+    useEffect(() => {
+        if (!checkSpriteOptionIsValidForGen(spriteChoice, pkmnGen)) {
+            updateSpriteChoice("Pokémon Showdown");
+        }
+    }, [spriteChoice, pkmnGen]);
 
     useEffect(() => {
         getSprite(25).then(setSpriteLink);
@@ -15,21 +37,23 @@ function SpriteSelector() {
 
     return (
         <div className="flex gap-3 items-center">
-            <img src={spriteLink} alt="Sprite visualisation" className="max-h-8" />
+            {spriteLink && <img src={spriteLink} alt="Sprite visualisation" className="max-h-8" />}
             <Select
                 value={spriteChoice?.toString()}
-                onValueChange={(val) => setSpriteChoice(val as PokemonSpriteChoice)}
+                onValueChange={(val) => updateSpriteChoice(val as PokemonSpriteChoice)}
             >
                 <SelectTrigger className="w-64 h-6 text-xs font-pokemon">
                     <SelectValue placeholder="Select a game" />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
-                        {Object.values(PokemonSpriteChoices).map((s) => (
-                            <SelectItem key={s} value={s} className="font-pokemon text-xs">
-                                <span>{s}</span>
-                            </SelectItem>
-                        ))}
+                        {Object.values(PokemonSpriteChoices)
+                            .filter((s) => checkSpriteOptionIsValidForGen(s, pkmnGen))
+                            .map((s) => (
+                                <SelectItem key={s} value={s} className="font-pokemon text-xs">
+                                    <span>{s}</span>
+                                </SelectItem>
+                            ))}
                     </SelectGroup>
                 </SelectContent>
             </Select>

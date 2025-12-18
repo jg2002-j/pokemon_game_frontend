@@ -74,10 +74,14 @@ export const handleTurnInfoEvent = ({ playerActionOptions, result }: TurnInfoEve
     logMsg(result.message);
 };
 
-const getGenerationFromNum = (num: number): Generation | undefined => {
-    return Object.values(Generations).find((gen) => gen.numericalVal === num);
+const getGenerationFromNum = (num: number): Generation => {
+    const gen = Object.values(Generations).find((gen) => gen.numericalVal === num);
+    if (!gen) throw new Error(`Generation with number ${num} not found`);
+    return gen;
 };
 
-const getGenFromName = (name: string): Generation | undefined => {
-    return Object.values(Generations).find((gen) => gen.name === name.toLowerCase());
+const getGenFromName = (name: string): Generation => {
+    const gen = Object.values(Generations).find((gen) => gen.name === name.toLowerCase());
+    if (!gen) throw new Error(`Generation with name "${name}" not found`);
+    return gen;
 };

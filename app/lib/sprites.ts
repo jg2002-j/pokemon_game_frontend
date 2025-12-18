@@ -1,5 +1,5 @@
 import type { Generation } from "~/types/Generation";
-import { PokemonSprites, type PokemonSpriteChoice } from "~/types/PokemonSpriteChoice";
+import { PokemonSprites, type PokemonSpriteChoice } from "~/types/Sprites";
 
 const spriteCache = new Map<string, string>();
 
@@ -14,7 +14,7 @@ export const getCroppedSprite = async (
 
     const spriteInfo = PokemonSprites[spriteChoice];
 
-    const shouldFallback = !spriteInfo || spriteInfo.gen < pkmnGen.numericalVal;
+    const shouldFallback = !spriteInfo || !checkSpriteOptionIsValidForGen(spriteChoice, pkmnGen);
 
     const url = shouldFallback ? getFallback(pkmnId) : buildSpriteUrl(pkmnId, spriteInfo.path, spriteInfo.animated);
 
@@ -34,6 +34,10 @@ export const getCroppedSprite = async (
         spriteCache.set(cacheKey, fallback);
         return fallback;
     }
+};
+
+export const checkSpriteOptionIsValidForGen = (val: PokemonSpriteChoice, pkmnGen: Generation) => {
+    return PokemonSprites[val].gen === 0 || PokemonSprites[val].gen >= pkmnGen.numericalVal;
 };
 
 const buildSpriteUrl = (pkmnId: number, path: string, animated: boolean) =>

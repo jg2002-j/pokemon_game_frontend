@@ -1,4 +1,4 @@
-import type { Result } from "../Result";
+import type { Result } from "~/types/Result";
 import type { ActionType } from "./ActionType";
 
 export interface TurnInfoEvent {
