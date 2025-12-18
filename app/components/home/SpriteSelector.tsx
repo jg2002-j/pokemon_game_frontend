@@ -5,17 +5,17 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { PokemonSpriteChoices, PokemonSprites, type PokemonSpriteChoice } from "~/types/Sprites";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import type { Generation } from "~/types/Generation";
 import { checkSpriteOptionIsValidForGen } from "~/lib/sprites";
 
-function SpriteSelector() {
+export default function SpriteSelector() {
     const { spriteChoice, setSpriteChoice, getSprite, pkmnGen, logMsg } = useGameContext();
     const [spriteLink, setSpriteLink] = useState<string | null>(null);
 
     const updateSpriteChoice = (val: PokemonSpriteChoice) => {
         if (checkSpriteOptionIsValidForGen(val, pkmnGen)) {
             setSpriteChoice(val);
-            toast.success("Pokémon sprites updated to use " + spriteChoice);
+            toast.success("Pokémon sprites updated to " + val);
+            logMsg("Pokémon sprites to " + val);
         } else {
             toast.error(
                 "This isn't a valid choice. Please choose a game that is in Generation " +
@@ -60,5 +60,3 @@ function SpriteSelector() {
         </div>
     );
 }
-
-export default SpriteSelector;

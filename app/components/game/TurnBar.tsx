@@ -1,7 +1,7 @@
 import PlayerActionCard from "./PlayerActionCard";
 import { useGameContext } from "~/GameContext";
 
-function GameSection() {
+export default function TurnBar() {
     const { players, playerTurnOpts } = useGameContext();
     return (
         <>
@@ -22,5 +22,3 @@ function GameSection() {
         </>
     );
 }
-
-export default GameSection;

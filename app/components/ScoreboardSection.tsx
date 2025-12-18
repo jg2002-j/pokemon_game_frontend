@@ -1,15 +1,13 @@
 import { useGameContext } from "~/GameContext";
 
-import PlayerCard from "./scoreboard_section/PlayerCard";
-import Stats from "./scoreboard_section/Stats";
+import PlayerCard from "./scoreboard/PlayerCard";
 
-function ScoreboardSection() {
+export default function ScoreboardSection() {
     const { players, team1, team2 } = useGameContext();
 
     return (
         <>
             <h1 className="text-7xl font-tanklager font-bold">Scoreboard</h1>
-            {players.length > 0 && <Stats />}
             <div className="flex flex-col gap-5">
                 {team1.length > 0 && (
                     <>
@@ -35,5 +33,3 @@ function ScoreboardSection() {
         </>
     );
 }
-
-export default ScoreboardSection;

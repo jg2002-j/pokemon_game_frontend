@@ -18,7 +18,7 @@ import type { PlayerEvent } from "~/types/events/PlayerEvent";
 import type { TurnActionEvent } from "~/types/events/TurnActionEvent";
 import type { TurnInfoEvent } from "~/types/events/TurnInfoEvent";
 
-function WebSocketButton() {
+export default function WebSocketButton() {
     const { logMsg } = useGameContext();
     type AnyEvent = GameEvent | PlayerEvent | TurnActionEvent | TurnInfoEvent;
 
@@ -102,5 +102,3 @@ function WebSocketButton() {
         </div>
     );
 }
-
-export default WebSocketButton;

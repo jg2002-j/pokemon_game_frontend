@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { CommandItem } from "../ui/command";
 import { useGameContext } from "~/GameContext";
-import type { SimplePokemonDto } from "~/components/pre_game_section/types/SimplePokemonDto";
 import { CheckIcon } from "lucide-react";
 import { cn } from "~/lib/utils";
+import type { SimplePokemonDto } from "./types/SimplePokemonDto";
 
 interface PokemonSlotComboboxOptionProps {
     p: SimplePokemonDto;
@@ -12,7 +12,7 @@ interface PokemonSlotComboboxOptionProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function PokemonSlotComboboxOption({ p, value, setValue, setOpen }: PokemonSlotComboboxOptionProps) {
+export default function PokemonSlotComboboxOption({ p, value, setValue, setOpen }: PokemonSlotComboboxOptionProps) {
     const { getSprite } = useGameContext();
 
     const [sprite, setSprite] = useState<string | null>(null);
@@ -42,5 +42,3 @@ function PokemonSlotComboboxOption({ p, value, setValue, setOpen }: PokemonSlotC
         </>
     );
 }
-
-export default PokemonSlotComboboxOption;

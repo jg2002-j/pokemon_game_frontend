@@ -14,7 +14,7 @@ interface PokemonTileProps {
     index: number;
 }
 
-function PokemonTile({ activePkmn, player, pokemon, index }: PokemonTileProps) {
+export default function PokemonTile({ activePkmn, player, pokemon, index }: PokemonTileProps) {
     const { getSprite } = useGameContext();
     const [sprite, setSprite] = useState<string>("");
     const sizes = activePkmn ? "w-16 h-16" : "w-8 h-8";
@@ -78,5 +78,3 @@ function PokemonTile({ activePkmn, player, pokemon, index }: PokemonTileProps) {
         </TooltipProvider>
     );
 }
-
-export default PokemonTile;

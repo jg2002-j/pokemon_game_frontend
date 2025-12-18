@@ -11,7 +11,7 @@ interface PlayerActionCardProps {
     options: ActionType[] | undefined;
 }
 
-function PlayerActionCard({ player, options }: PlayerActionCardProps) {
+export default function PlayerActionCard({ player, options }: PlayerActionCardProps) {
     const [choice, setChoice] = useState<ActionType>("NONE");
 
     const updateChoice = (e: React.MouseEvent<HTMLButtonElement>, val: ActionType) => {
@@ -63,5 +63,3 @@ function PlayerActionCard({ player, options }: PlayerActionCardProps) {
         </Card>
     );
 }
-
-export default PlayerActionCard;

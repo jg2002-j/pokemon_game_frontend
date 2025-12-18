@@ -13,7 +13,7 @@ import {
     SheetTrigger,
 } from "~/components/ui/sheet";
 
-function LogBoxButton() {
+export default function LogBoxButton() {
     const { logs } = useGameContext();
     return (
         <div>
@@ -49,5 +49,3 @@ function LogBoxButton() {
         </div>
     );
 }
-
-export default LogBoxButton;

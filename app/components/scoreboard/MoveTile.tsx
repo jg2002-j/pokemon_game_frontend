@@ -8,7 +8,7 @@ interface MoveTileProps {
     index: number;
 }
 
-function MoveTile({ player, move, index }: MoveTileProps) {
+export default function MoveTile({ player, move, index }: MoveTileProps) {
     return (
         <TooltipProvider
             key={`${player.username}-${player.pokemon.id}-${player.activePokemonIndex}-${move.name}-${index}`}
@@ -46,5 +46,3 @@ function MoveTile({ player, move, index }: MoveTileProps) {
         </TooltipProvider>
     );
 }
-
-export default MoveTile;

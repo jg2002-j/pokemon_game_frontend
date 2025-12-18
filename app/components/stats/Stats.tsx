@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card";
 import { Progress } from "../ui/progress";
 
-function Stats() {
+export default function Stats() {
     const [topVal, setTopVal] = useState<number>(100);
 
     const calcPercentageOfTop = (dmg: number) => {
@@ -31,5 +31,3 @@ function Stats() {
         </div>
     );
 }
-
-export default Stats;

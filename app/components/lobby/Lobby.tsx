@@ -9,10 +9,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/componen
 
 import NewPokemonBox from "./NewPokemonBox";
 
-import type { SimplePokemonDto } from "~/components/pre_game_section/types/SimplePokemonDto";
 import type { PlayerDto } from "./types/PlayerDto";
+import type { SimplePokemonDto } from "./types/SimplePokemonDto";
 
-function JoinLeave() {
+export default function Lobby() {
     const { pkmnGen } = useGameContext();
     const blankPlayer: PlayerDto = {
         username: "",
@@ -117,5 +117,3 @@ function JoinLeave() {
         </div>
     );
 }
-
-export default JoinLeave;

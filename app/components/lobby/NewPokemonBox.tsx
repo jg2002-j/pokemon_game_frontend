@@ -6,9 +6,9 @@ import { Button } from "~/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from "~/components/ui/command";
 
-import type { SimplePokemonDto } from "~/components/pre_game_section/types/SimplePokemonDto";
 import PokemonSlotComboboxOption from "./PokemonSlotComboboxOption";
 import type { PlayerDto } from "./types/PlayerDto";
+import type { SimplePokemonDto } from "./types/SimplePokemonDto";
 
 interface NewPokemonBoxProps {
     pokeOptions: SimplePokemonDto[];
@@ -16,7 +16,7 @@ interface NewPokemonBoxProps {
     setPlayer: React.Dispatch<React.SetStateAction<PlayerDto>>;
 }
 
-function NewPokemonBox({ pokeOptions, player, setPlayer }: NewPokemonBoxProps) {
+export default function NewPokemonBox({ pokeOptions, player, setPlayer }: NewPokemonBoxProps) {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState("");
 
@@ -59,5 +59,3 @@ function NewPokemonBox({ pokeOptions, player, setPlayer }: NewPokemonBoxProps) {
         </div>
     );
 }
-
-export default NewPokemonBox;

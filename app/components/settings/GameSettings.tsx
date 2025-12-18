@@ -9,7 +9,7 @@ import { Generations, type GenerationName } from "~/types/Generation";
 import { useGameContext } from "~/GameContext";
 import { toast } from "sonner";
 
-function GameSettings() {
+export default function GameSettings() {
     const { pkmnLvl, setPkmnLvl, pkmnGen, setPkmnGen } = useGameContext();
 
     const submitSettings = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -90,5 +90,3 @@ function GameSettings() {
         </div>
     );
 }
-
-export default GameSettings;
