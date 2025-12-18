@@ -1,4 +1,4 @@
-import { useGameContext } from "~/GameContext";
+import { useGameContext } from "~/contexts/GameContext";
 
 import PlayerCard from "./scoreboard/PlayerCard";
 

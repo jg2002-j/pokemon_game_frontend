@@ -1,13 +1,37 @@
-import { useGameContext } from "~/GameContext";
+import { useGameContext } from "~/contexts/GameContext";
+import { getGenerationFromNum, getGenFromName } from "~/types/Generation";
 import type { GameEvent } from "~/types/events/GameEvent";
 import type { PlayerEvent } from "~/types/events/PlayerEvent";
 import type { TurnActionEvent } from "~/types/events/TurnActionEvent";
 import type { TurnInfoEvent } from "~/types/events/TurnInfoEvent";
 import type { GameState } from "~/types/GameState";
-import { type Generation, Generations } from "~/types/Generation";
 import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
 
-export const handleGameState = (gameState: GameState) => {
+type AnyEvent = GameEvent | PlayerEvent | TurnActionEvent | TurnInfoEvent;
+
+export const isEvent = (data: any): data is AnyEvent =>
+    data && typeof data === "object" && typeof data.eventType === "string";
+
+export const handleEvent = (evt: AnyEvent) => {
+    switch (evt.eventType) {
+        case "GAME_EVENT":
+            handleGameEvent(evt);
+            break;
+        case "PLAYER_EVENT":
+            handlePlayerEvent(evt);
+            break;
+        case "TURN_ACTION_EVENT":
+            handleTurnActionEvent(evt);
+            break;
+        case "TURN_INFO_EVENT":
+            handleTurnInfoEvent(evt);
+            break;
+        default:
+            console.warn("Unhandled event type", evt);
+    }
+};
+
+const handleGameState = (gameState: GameState) => {
     const { logMsg, setPkmnLvl, setPkmnGen, setPlayers } = useGameContext();
     logMsg(
         "Fetched current gameState -> GEN: [" +
@@ -28,7 +52,7 @@ export const handleGameState = (gameState: GameState) => {
     setPlayers(gameState.allPlayers);
 };
 
-export const handleGameEvent = ({ gameEvtType, newVal, result }: GameEvent) => {
+const handleGameEvent = ({ gameEvtType, newVal, result }: GameEvent) => {
     const { setPkmnLvl, setPkmnGen, setTurnNum, logMsg } = useGameContext();
     switch (gameEvtType) {
         case "LEVEL_CHANGE":
@@ -44,7 +68,7 @@ export const handleGameEvent = ({ gameEvtType, newVal, result }: GameEvent) => {
     logMsg(result.message);
 };
 
-export const handlePlayerEvent = ({ playerEvtType, player, result }: PlayerEvent) => {
+const handlePlayerEvent = ({ playerEvtType, player, result }: PlayerEvent) => {
     const { players, setPlayers, logMsg } = useGameContext();
     if (playerEvtType === "JOIN") {
         if (!players.some((p) => p.username === player.username)) {
@@ -57,14 +81,14 @@ export const handlePlayerEvent = ({ playerEvtType, player, result }: PlayerEvent
     logMsg(result.message);
 };
 
-export const handleTurnActionEvent = ({ turnActionEvtTypes, affectedPlayer, result }: TurnActionEvent) => {
+const handleTurnActionEvent = ({ turnActionEvtTypes, affectedPlayer, result }: TurnActionEvent) => {
     const { logMsg } = useGameContext();
     // TODO
     logMsg(result.message);
     console.log("Not implemented yet.");
 };
 
-export const handleTurnInfoEvent = ({ playerActionOptions, result }: TurnInfoEvent) => {
+const handleTurnInfoEvent = ({ playerActionOptions, result }: TurnInfoEvent) => {
     const { setPlayerTurnOpts, logMsg } = useGameContext();
     const mappedOptions: PlayerTurnOption[] = Object.entries(playerActionOptions).map(([username, options]) => ({
         username,
@@ -72,16 +96,4 @@ export const handleTurnInfoEvent = ({ playerActionOptions, result }: TurnInfoEve
     }));
     setPlayerTurnOpts(mappedOptions);
     logMsg(result.message);
-};
-
-const getGenerationFromNum = (num: number): Generation => {
-    const gen = Object.values(Generations).find((gen) => gen.numericalVal === num);
-    if (!gen) throw new Error(`Generation with number ${num} not found`);
-    return gen;
-};
-
-const getGenFromName = (name: string): Generation => {
-    const gen = Object.values(Generations).find((gen) => gen.name === name.toLowerCase());
-    if (!gen) throw new Error(`Generation with name "${name}" not found`);
-    return gen;
 };

@@ -3,8 +3,10 @@ import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration }
 import "./app.css";
 import type { Route } from "./+types/root";
 
-import { GameProvider } from "./GameContext";
+import { GameProvider } from "./contexts/GameContext";
 import { Toaster } from "~/components/ui/sonner";
+import Toolbar from "./components/home/Toolbar";
+import { WebSocketProvider } from "./contexts/WebSocketContext";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -40,9 +42,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
     return (
-        <GameProvider>
-            <Outlet />
-        </GameProvider>
+        <WebSocketProvider>
+            <GameProvider>
+                <Toolbar />
+                <Outlet />
+            </GameProvider>
+        </WebSocketProvider>
     );
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useGameContext } from "~/GameContext";
+import { useGameContext } from "~/contexts/GameContext";
 
 import { Progress } from "~/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";

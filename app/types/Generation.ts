@@ -15,3 +15,15 @@ export const Generations: Record<GenerationName, Generation> = {
     vii: { name: "vii", numericalVal: 7 },
     viii: { name: "viii", numericalVal: 8 },
 };
+
+export const getGenerationFromNum = (num: number): Generation => {
+    const gen = Object.values(Generations).find((gen) => gen.numericalVal === num);
+    if (!gen) throw new Error(`Generation with number ${num} not found`);
+    return gen;
+};
+
+export const getGenFromName = (name: string): Generation => {
+    const gen = Object.values(Generations).find((gen) => gen.name === name.toLowerCase());
+    if (!gen) throw new Error(`Generation with name "${name}" not found`);
+    return gen;
+};

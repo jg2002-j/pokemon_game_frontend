@@ -1,10 +1,10 @@
 import { type ReactNode, useState, useContext, createContext, useMemo } from "react";
-import { getCroppedSprite } from "./lib/sprites";
-import { Generations, type Generation } from "./types/Generation";
-import type { LogMessage } from "./types/LogMessage";
-import type { Player } from "./types/Player";
-import type { PlayerTurnOption } from "./types/PlayerTurnOptions";
-import type { PokemonSpriteChoice } from "./types/Sprites";
+import { getCroppedSprite } from "../lib/sprites";
+import { Generations, type Generation } from "../types/Generation";
+import type { LogMessage } from "../types/LogMessage";
+import type { Player } from "../types/Player";
+import type { PlayerTurnOption } from "../types/PlayerTurnOptions";
+import type { PokemonSpriteChoice } from "../types/Sprites";
 
 interface GameContextType {
     logs: LogMessage[];

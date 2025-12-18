@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useGameContext } from "~/GameContext";
+import { useGameContext } from "~/contexts/GameContext";
 import { toast } from "sonner";
 
 import { Input } from "~/components/ui/input";
@@ -102,8 +102,8 @@ export default function Lobby() {
                         </CardHeader>
                         <CardContent className="grid grid-cols-2 items-stretch">
                             <div className="flex flex-col gap-2 items-start">
-                                {player.pkmnTeam.map((p) => (
-                                    <div>{p}</div>
+                                {player.pkmnTeam.map((p, index) => (
+                                    <div key={`${player}-${p}-${index}`}>{p}</div>
                                 ))}
                             </div>
                             <NewPokemonBox pokeOptions={pokeOptions} player={player} setPlayer={setPlayer} />

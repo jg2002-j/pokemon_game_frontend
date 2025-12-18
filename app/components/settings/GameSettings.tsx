@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 
 import { Generations, type GenerationName } from "~/types/Generation";
-import { useGameContext } from "~/GameContext";
+import { useGameContext } from "~/contexts/GameContext";
 import { toast } from "sonner";
 
 export default function GameSettings() {
@@ -36,7 +36,7 @@ export default function GameSettings() {
     };
 
     return (
-        <div id="settings" className="mb-10">
+        <div id="settings">
             <h2 className="font-tanklager text-5xl mb-5">Game Settings</h2>
             <form onSubmit={submitSettings} className="flex flex-col gap-5 items-start">
                 <div className="grid grid-cols-3 gap-5 items-stretch">

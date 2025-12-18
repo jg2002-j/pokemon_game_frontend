@@ -1,5 +1,5 @@
 import PlayerActionCard from "./PlayerActionCard";
-import { useGameContext } from "~/GameContext";
+import { useGameContext } from "~/contexts/GameContext";
 
 export default function TurnBar() {
     const { players, playerTurnOpts } = useGameContext();

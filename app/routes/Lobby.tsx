@@ -1,11 +1,9 @@
-import Toolbar from "~/components/home/Toolbar";
 import Lobby from "~/components/lobby/Lobby";
 
 export default function LobbyPage() {
     return (
-        <>
-            <Toolbar />
+        <div className="p-5 flex flex-col gap-10 pt-24">
             <Lobby />
-        </>
+        </div>
     );
 }

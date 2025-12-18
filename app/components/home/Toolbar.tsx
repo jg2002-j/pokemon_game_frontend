@@ -1,4 +1,4 @@
-import { useGameContext } from "~/GameContext";
+import { useGameContext } from "~/contexts/GameContext";
 import WebSocketButton from "~/components/home/WebSocketButton";
 import LogBoxButton from "~/components/home/LogBoxButton";
 import SpriteSelector from "~/components/home/SpriteSelector";

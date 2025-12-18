@@ -1,4 +1,4 @@
-import { useGameContext } from "~/GameContext";
+import { useGameContext } from "~/contexts/GameContext";
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CommandItem } from "../ui/command";
-import { useGameContext } from "~/GameContext";
+import { useGameContext } from "~/contexts/GameContext";
 import { CheckIcon } from "lucide-react";
 import { cn } from "~/lib/utils";
 import type { SimplePokemonDto } from "./types/SimplePokemonDto";
