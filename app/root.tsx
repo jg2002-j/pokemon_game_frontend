@@ -42,12 +42,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
     return (
-        <WebSocketProvider>
-            <GameProvider>
+        <GameProvider>
+            <WebSocketProvider>
                 <Toolbar />
                 <Outlet />
-            </GameProvider>
-        </WebSocketProvider>
+            </WebSocketProvider>
+        </GameProvider>
     );
 }
 

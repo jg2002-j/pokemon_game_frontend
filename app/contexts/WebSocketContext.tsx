@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
 
 import { toast } from "sonner";
-import { useGameContext } from "~/contexts/GameContext";
 import { handleEvent, isEvent } from "~/lib/eventsHandler";
+import { useGameContext } from "./GameContext";
 
 type WebSocketContextValue = {
     connected: boolean;
@@ -15,6 +15,7 @@ const WebSocketContext = createContext<WebSocketContextValue | null>(null);
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     const socketRef = useRef<WebSocket | null>(null);
+    const gameContext = useGameContext();
     const [connected, setConnected] = useState(false);
 
     const handleMessage = (event: MessageEvent) => {
@@ -24,7 +25,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
                 toast.warning("Received malformed payload from server.");
                 return;
             }
-            handleEvent(data);
+            handleEvent(data, gameContext);
         } catch (err) {
             console.error("WS parse error", err);
         }
