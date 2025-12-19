@@ -44,7 +44,7 @@ export default function PokemonSlotComboboxOption({
     };
 
     return (
-        <CommandItem key={p.name} value={p.name} onSelect={(currentValue) => updateSlotChoice(currentValue)}>
+        <CommandItem value={p.name} onSelect={(currentValue) => updateSlotChoice(currentValue)}>
             <div className="flex gap-3 items-center">
                 <div className="w-10">
                     {sprite && <img src={sprite} alt={p.name} className="h-6 place-content-start" />}

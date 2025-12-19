@@ -70,94 +70,85 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
     }, [player.pkmnTeam, pokeOptions, getSprite]);
 
     return (
-        <div>
-            <Card id="choosePokemonTeam" className="min-w-2xl h-full">
-                <CardHeader>
-                    <CardTitle className="font-tanklager text-4xl">Choose Pokémon Team</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-5">
-                    <div className="flex gap-3 items-start">
-                        {player.pkmnTeam
-                            .map((nameString) => pokeOptions.find((pOpt) => pOpt.name === nameString))
-                            .map((p, index) => (
-                                <Button
-                                    key={index}
-                                    variant={activeSlot === index ? "active" : "default"}
-                                    className="flex flex-col gap-3 items-center h-fit w-32"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setActiveSlot(index as SlotIndex);
-                                    }}
-                                >
-                                    <div className="h-10 min-w-16 flex flex-col items-center">
-                                        {p != null && sprites[index] !== null && sprites[index] !== "" && (
-                                            <img
-                                                src={sprites[index]}
-                                                alt={p.name}
-                                                className="h-full place-content-start"
-                                            />
-                                        )}
-                                    </div>
-                                    <div className="uppercase font-pokemon">{p != null ? p.name : "--"}</div>
-                                </Button>
-                            ))}
-                    </div>
-                    <div className="flex gap-5 items-center">
-                        <Badge>{activeSlot + 1}</Badge>
-                        <Popover open={comboboxOpen} onOpenChange={setComboboxOpen}>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="noShadow"
-                                    role="combobox"
-                                    aria-expanded={comboboxOpen}
-                                    className="font-pokemon w-full justify-between md:max-w-78"
-                                >
-                                    {comboboxVal
-                                        ? pokeOptions.find((p) => p.name === comboboxVal)?.name.toUpperCase()
-                                        : "Choose a Pokémon..."}
-                                    <ChevronsUpDown />
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="font-pokemon uppercase w-(--radix-popover-trigger-width) border-0 p-0">
-                                <Command className="**:data-[slot=command-input-wrapper]:h-11">
-                                    <CommandInput placeholder="Search Pokémon..." />
-                                    <CommandList className="p-1">
-                                        <CommandEmpty>No Pokémon found.</CommandEmpty>
-                                        <CommandGroup>
-                                            {pokeOptions.map((p) => (
-                                                <PokemonSlotComboboxOption
-                                                    p={p}
-                                                    value={comboboxVal}
-                                                    activeSlot={activeSlot}
-                                                    setPlayer={setPlayer}
-                                                    setValue={setComboboxVal}
-                                                    setOpen={setComboboxOpen}
-                                                />
-                                            ))}
-                                        </CommandGroup>
-                                    </CommandList>
-                                </Command>
-                            </PopoverContent>
-                        </Popover>
+        <>
+            <div id="pokemonDisplay" className="grid grid-cols-3 gap-3">
+                {player.pkmnTeam
+                    .map((nameString) => pokeOptions.find((pOpt) => pOpt.name === nameString))
+                    .map((p, index) => (
                         <Button
-                            variant={"noShadow"}
+                            key={index}
+                            variant={activeSlot === index ? "active" : "default"}
+                            className="flex flex-col gap-3 items-center h-fit w-36"
                             onClick={(e) => {
                                 e.preventDefault();
-                                setPlayer((prev) => {
-                                    const newTeam = [...prev.pkmnTeam] as PlayerDto["pkmnTeam"];
-                                    newTeam[activeSlot] = "";
-                                    return {
-                                        ...prev,
-                                        pkmnTeam: newTeam,
-                                    };
-                                });
+                                setActiveSlot(index as SlotIndex);
                             }}
                         >
-                            <X />
+                            <div className="h-10 flex flex-col items-center">
+                                {p != null && sprites[index] !== null && sprites[index] !== "" && (
+                                    <img src={sprites[index]} alt={p.name} className="h-full place-content-start" />
+                                )}
+                            </div>
+                            <div className="uppercase font-pokemon text-xs">{p != null ? p.name : "--"}</div>
                         </Button>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
+                    ))}
+            </div>
+            <div id="pokemonDropdown" className="flex gap-5 justify-center items-center">
+                <Badge>{activeSlot + 1}</Badge>
+                <Popover open={comboboxOpen} onOpenChange={setComboboxOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="noShadow"
+                            role="combobox"
+                            aria-expanded={comboboxOpen}
+                            className="font-pokemon w-full justify-between md:max-w-78"
+                        >
+                            {comboboxVal
+                                ? pokeOptions.find((p) => p.name === comboboxVal)?.name.toUpperCase()
+                                : "Choose a Pokémon..."}
+                            <ChevronsUpDown />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="font-pokemon uppercase w-(--radix-popover-trigger-width) border-0 p-0">
+                        <Command className="**:data-[slot=command-input-wrapper]:h-11">
+                            <CommandInput placeholder="Search Pokémon..." />
+                            <CommandList className="p-1">
+                                <CommandEmpty>No Pokémon found.</CommandEmpty>
+                                <CommandGroup>
+                                    {pokeOptions.map((p, index) => (
+                                        <div key={index}>
+                                            <PokemonSlotComboboxOption
+                                                p={p}
+                                                value={comboboxVal}
+                                                activeSlot={activeSlot}
+                                                setPlayer={setPlayer}
+                                                setValue={setComboboxVal}
+                                                setOpen={setComboboxOpen}
+                                            />
+                                        </div>
+                                    ))}
+                                </CommandGroup>
+                            </CommandList>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
+                <Button
+                    size={"icon-sm"}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setPlayer((prev) => {
+                            const newTeam = [...prev.pkmnTeam] as PlayerDto["pkmnTeam"];
+                            newTeam[activeSlot] = "";
+                            return {
+                                ...prev,
+                                pkmnTeam: newTeam,
+                            };
+                        });
+                    }}
+                >
+                    <X />
+                </Button>
+            </div>
+        </>
     );
 }
