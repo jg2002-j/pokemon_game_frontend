@@ -12,9 +12,10 @@ import { Button } from "../ui/button";
 import PlayerTeamButtons from "./PlayerTeamButtons";
 import AvatarSelection from "./AvatarSelection";
 import { useGameContext } from "~/contexts/GameContext";
+import LeaveTile from "./LeaveTile";
 
 export default function Lobby() {
-    const { logMsg, players } = useGameContext();
+    const { logMsg, team1, team2 } = useGameContext();
 
     const blankPlayer: PlayerDto = {
         username: "",
@@ -70,14 +71,10 @@ export default function Lobby() {
         }
     };
 
-    useEffect(() => {
-        console.log(player);
-    }, [player]);
-
     return (
-        <div>
-            <h2 className="font-tanklager text-5xl mb-5">Lobby</h2>
-            <div className="flex flex-col gap-20 items-start">
+        <>
+            <div className="flex flex-col gap-15 w-fit mx-auto">
+                <h2 className="font-tanklager text-5xl text-center">Lobby</h2>
                 <form onSubmit={addNewPlayer} className="flex flex-col gap-5">
                     <Card id="choosePokemonTeam" className="h-full">
                         <CardHeader>
@@ -118,9 +115,26 @@ export default function Lobby() {
                         </Tooltip>
                     </TooltipProvider>
                 </form>
-
-                <h3 className="font-tanklager text-3xl">Leave</h3>
+                <Card id="leave" className="h-full flex flex-col gap-5">
+                    <CardHeader>
+                        <CardTitle className="font-tanklager text-4xl">Leave Game</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-10">
+                        <div className="flex flex-col gap-2">
+                            <h3 className="text-2xl">Team 1</h3>
+                            {team1.map((player, index) => (
+                                <LeaveTile player={player} index={index} />
+                            ))}
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h3 className="text-2xl">Team 2</h3>
+                            {team2.map((player, index) => (
+                                <LeaveTile player={player} index={index} />
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
-        </div>
+        </>
     );
 }
