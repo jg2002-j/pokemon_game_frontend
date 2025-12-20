@@ -8,7 +8,7 @@ export const getCroppedSprite = async (
     spriteChoice: PokemonSpriteChoice,
     pkmnGen: Generation
 ): Promise<string> => {
-    const cacheKey = `${pkmnId}-${spriteChoice}-${pkmnGen.numericalVal}`;
+    const cacheKey = `${pkmnId}-${spriteChoice}-${pkmnGen.number}`;
     const cached = spriteCache.get(cacheKey);
     if (cached) return cached;
 
@@ -37,7 +37,7 @@ export const getCroppedSprite = async (
 };
 
 export const checkSpriteOptionIsValidForGen = (val: PokemonSpriteChoice, pkmnGen: Generation) => {
-    return PokemonSprites[val].gen === 0 || PokemonSprites[val].gen >= pkmnGen.numericalVal;
+    return PokemonSprites[val].gen === 0 || PokemonSprites[val].gen >= pkmnGen.number;
 };
 
 const buildSpriteUrl = (pkmnId: number, path: string, animated: boolean) =>

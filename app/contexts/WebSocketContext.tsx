@@ -1,8 +1,11 @@
 import { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
 
 import { toast } from "sonner";
-import { handleEvent, isEvent } from "~/lib/eventsHandler";
 import { useGameContext } from "./GameContext";
+import type { WsMessage } from "~/types/WsMessage";
+import { getGenFromName } from "~/types/Generation";
+import type { Player } from "~/types/Player";
+import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
 
 type WebSocketContextValue = {
     connected: boolean;
@@ -15,20 +18,35 @@ const WebSocketContext = createContext<WebSocketContextValue | null>(null);
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     const socketRef = useRef<WebSocket | null>(null);
-    const gameContext = useGameContext();
+    const { logMsg, setPkmnGen, setPkmnLvl, setPlayers, setPlayerTurnOpts } = useGameContext();
     const [connected, setConnected] = useState(false);
 
     const handleMessage = (event: MessageEvent) => {
         try {
             const data = JSON.parse(event.data);
-            if (!isEvent(data)) {
-                toast.warning("Received malformed payload from server.");
-                return;
-            }
-            handleEvent(data, gameContext);
+            toast.warning("Received malformed payload from server.");
+            handleEvent(data);
         } catch (err) {
             console.error("WS parse error", err);
         }
+    };
+
+    const handleEvent = (data: WsMessage) => {
+        logMsg(data.result.message);
+        if (data.type === "ERROR") {
+            toast.error(data.result.message);
+            return;
+        }
+        const { pkmnGen, pkmnLvl, players, playerTurnOptions } = data.payload;
+        setPkmnGen(getGenFromName(pkmnGen));
+        setPkmnLvl(pkmnLvl);
+        const playerArray: Player[] = Object.values(players);
+        setPlayers(playerArray);
+        const mappedOptions: PlayerTurnOption[] = Object.entries(playerTurnOptions).map(([username, options]) => ({
+            username,
+            options,
+        }));
+        setPlayerTurnOpts(mappedOptions);
     };
 
     const connect = useCallback(() => {

@@ -8,9 +8,9 @@ import type { PlayerDto } from "./types/PlayerDto";
 
 interface PokemonSlotComboboxOptionProps {
     p: SimplePokemonDto;
-    value: string;
+    value: number | null;
     activeSlot: number;
-    setValue: React.Dispatch<React.SetStateAction<string>>;
+    setValue: React.Dispatch<React.SetStateAction<number | null>>;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setPlayer: React.Dispatch<React.SetStateAction<PlayerDto>>;
 }
@@ -28,10 +28,10 @@ export default function PokemonSlotComboboxOption({
 
     useEffect(() => {
         getSprite(p.id).then(setSprite);
-    }, [getSprite, sprite]);
+    }, [getSprite, p.id]);
 
-    const updateSlotChoice = (currentValue: string) => {
-        setValue(currentValue === value ? "" : currentValue);
+    const updateSlotChoice = (currentValue: number) => {
+        setValue(currentValue === value ? null : currentValue);
         setOpen(false);
         setPlayer((prev) => {
             const newTeam = [...prev.pkmnTeam] as PlayerDto["pkmnTeam"];
@@ -44,14 +44,18 @@ export default function PokemonSlotComboboxOption({
     };
 
     return (
-        <CommandItem value={p.name} onSelect={(currentValue) => updateSlotChoice(currentValue)}>
+        <CommandItem
+            value={p.id.toString()}
+            keywords={[p.id.toString(), p.name]}
+            onSelect={() => updateSlotChoice(p.id)}
+        >
             <div className="flex gap-3 items-center">
                 <div className="w-10">
                     {sprite && <img src={sprite} alt={p.name} className="h-6 place-content-start" />}
                 </div>
                 <span className="text-xs">{p.name}</span>
             </div>
-            <CheckIcon className={cn("ml-auto", value === p.name ? "opacity-100" : "opacity-0")} />
+            <CheckIcon className={cn("ml-auto", value === p.id ? "opacity-100" : "opacity-0")} />
         </CommandItem>
     );
 }

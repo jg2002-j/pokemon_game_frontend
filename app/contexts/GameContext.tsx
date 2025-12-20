@@ -40,7 +40,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
 
     const [pkmnLvl, setPkmnLvl] = useState<number>(50);
     const [pkmnGen, setPkmnGen] = useState<Generation>(Generations.v);
-    const [spriteChoice, setSpriteChoice] = useState<PokemonSpriteChoice>("Black & White (Animated)");
+    const [spriteChoice, setSpriteChoice] = useState<PokemonSpriteChoice>("Black & White");
 
     const [turnNum, setTurnNum] = useState<number | null>(null);
     const [players, setPlayers] = useState<Player[]>([]);

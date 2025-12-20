@@ -1,4 +1,4 @@
-import type { ActionType } from "./events/ActionType";
+import type { ActionType } from "./ActionType";
 
 export interface PlayerTurnOption {
     username: string;

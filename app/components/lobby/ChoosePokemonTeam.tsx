@@ -24,7 +24,7 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
     useEffect(() => {
         const fetchAllPokemon = async () => {
             try {
-                const response = await fetch("/clapped/pokemon/validForGen/" + pkmnGen.numericalVal, {
+                const response = await fetch("/clapped/pokemon/validForGen/" + pkmnGen.number, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                 });
@@ -41,22 +41,20 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
     const [sprites, setSprites] = useState<string[]>([]);
 
     const [comboboxOpen, setComboboxOpen] = useState<boolean>(false);
-    const [comboboxVal, setComboboxVal] = useState<string>("");
+    const [comboboxVal, setComboboxVal] = useState<number | null>(null);
 
     useEffect(() => {
         const slotValue = player.pkmnTeam[activeSlot];
-        setComboboxVal(slotValue ?? "");
+        setComboboxVal(slotValue);
     }, [activeSlot, player.pkmnTeam]);
 
     useEffect(() => {
         let cancelled = false;
         const loadSprites = async () => {
             const spritesArray = await Promise.all(
-                player.pkmnTeam.map(async (name) => {
-                    if (!name) return "";
-                    const pokemon = pokeOptions.find((opt) => opt.name === name);
-                    if (!pokemon) return "";
-                    return await getSprite(pokemon.id);
+                player.pkmnTeam.map(async (id) => {
+                    if (!id) return "";
+                    return await getSprite(id);
                 })
             );
             if (!cancelled) {
@@ -73,7 +71,7 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
         <>
             <div id="pokemonDisplay" className="grid grid-cols-3 gap-3">
                 {player.pkmnTeam
-                    .map((nameString) => pokeOptions.find((pOpt) => pOpt.name === nameString))
+                    .map((id) => pokeOptions.find((pOpt) => pOpt.id === id))
                     .map((p, index) => (
                         <Button
                             key={index}
@@ -104,7 +102,7 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
                             className="font-pokemon w-full justify-between md:max-w-78"
                         >
                             {comboboxVal
-                                ? pokeOptions.find((p) => p.name === comboboxVal)?.name.toUpperCase()
+                                ? pokeOptions.find((p) => p.id === comboboxVal)?.name.toUpperCase()
                                 : "Choose a Pokémon..."}
                             <ChevronsUpDown />
                         </Button>
@@ -138,7 +136,7 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
                         e.preventDefault();
                         setPlayer((prev) => {
                             const newTeam = [...prev.pkmnTeam] as PlayerDto["pkmnTeam"];
-                            newTeam[activeSlot] = "";
+                            newTeam[activeSlot] = null;
                             return {
                                 ...prev,
                                 pkmnTeam: newTeam,

@@ -21,7 +21,7 @@ export default function Lobby() {
         username: "",
         avatarUrl: "",
         teamNum: 1,
-        pkmnTeam: ["", "", "", "", "", ""],
+        pkmnTeam: [null, null, null, null, null, null],
     };
     const [player, setPlayer] = useState<PlayerDto>(blankPlayer);
 
@@ -35,7 +35,7 @@ export default function Lobby() {
         if (!player.avatarUrl || !player.avatarUrl.trim()) {
             errors.push("Player avatar is not valid.");
         }
-        const hasPokemon = player.pkmnTeam.some((pkmn) => pkmn.trim() !== "");
+        const hasPokemon = player.pkmnTeam.some((pkmn) => pkmn !== null);
         if (!hasPokemon) {
             errors.push("There must be at least one Pokémon on the team.");
         }
@@ -43,6 +43,7 @@ export default function Lobby() {
     };
 
     useEffect(() => {
+        console.log(player);
         const { errors } = isValidPlayer(player);
         setErrors(errors);
     }, [player]);
@@ -121,13 +122,13 @@ export default function Lobby() {
                     </CardHeader>
                     <CardContent className="flex flex-col gap-10">
                         <div className="flex flex-col gap-2">
-                            <h3 className="text-2xl">Team 1</h3>
+                            {team1.length > 0 && <h3 className="text-2xl">Team 1</h3>}
                             {team1.map((player, index) => (
                                 <LeaveTile player={player} index={index} />
                             ))}
                         </div>
                         <div className="flex flex-col gap-2">
-                            <h3 className="text-2xl">Team 2</h3>
+                            {team2.length > 0 && <h3 className="text-2xl">Team 2</h3>}
                             {team2.map((player, index) => (
                                 <LeaveTile player={player} index={index} />
                             ))}

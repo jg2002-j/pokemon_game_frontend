@@ -20,14 +20,14 @@ export default function GameSettings() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     level: pkmnLvl,
-                    gen: pkmnGen.numericalVal,
+                    gen: pkmnGen.number,
                 }),
             });
             if (!res.ok) {
                 throw new Error();
             }
             toast.success(
-                `Pokémon Level set to ${pkmnLvl} and Pokémon Generation set to ${pkmnGen.name.toUpperCase()}.`
+                `Pokémon Level set to ${pkmnLvl} and Pokémon Generation set to ${pkmnGen.slug.toUpperCase()}.`
             );
         } catch (err) {
             console.error(err);
@@ -62,7 +62,7 @@ export default function GameSettings() {
                         </CardHeader>
                         <CardContent>
                             <Select
-                                value={pkmnGen?.name}
+                                value={pkmnGen?.slug}
                                 onValueChange={(val) => {
                                     const key = val as GenerationName;
                                     setPkmnGen(Generations[key]);
@@ -74,8 +74,8 @@ export default function GameSettings() {
                                 <SelectContent>
                                     <SelectGroup>
                                         {Object.values(Generations).map((g) => (
-                                            <SelectItem key={g.name} value={g.name}>
-                                                {g.name.toUpperCase()}
+                                            <SelectItem key={g.slug} value={g.slug}>
+                                                {g.slug.toUpperCase()}
                                             </SelectItem>
                                         ))}
                                     </SelectGroup>

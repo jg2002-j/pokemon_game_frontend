@@ -19,7 +19,7 @@ export default function SpriteSelector() {
         } else {
             toast.error(
                 "This isn't a valid choice. Please choose a game that is in Generation " +
-                    pkmnGen.name.toUpperCase() +
+                    pkmnGen.slug.toUpperCase() +
                     " or later."
             );
         }

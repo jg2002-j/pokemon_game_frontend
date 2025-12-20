@@ -24,7 +24,7 @@ export default function Toolbar() {
                     </div>
                     <div className="flex items-center gap-2">
                         <span className="font-bold text-lg">Generation</span>
-                        <Badge>{pkmnGen?.name.toUpperCase()}</Badge>
+                        <Badge>{pkmnGen?.slug.toUpperCase()}</Badge>
                     </div>
                     <SpriteSelector />
                 </div>
