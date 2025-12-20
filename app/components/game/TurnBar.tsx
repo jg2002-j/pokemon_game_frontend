@@ -11,10 +11,12 @@ export default function TurnBar() {
                 <div className="flex flex-col gap-5">
                     <div className="grid grid-cols-5 gap-5">
                         {players?.map((p) => (
-                            <PlayerActionCard
-                                player={p}
-                                options={playerTurnOpts.find((opt) => opt.username === p.username)?.options}
-                            />
+                            <div key={p.username}>
+                                <PlayerActionCard
+                                    player={p}
+                                    options={playerTurnOpts.find((opt) => opt.username === p.username)?.options}
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>

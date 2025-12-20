@@ -14,17 +14,21 @@ export default function PlayerCard({ p }: PlayerCardProps) {
                 <CardHeader>
                     <CardTitle className="font-tanklager text-4xl">{p.username}</CardTitle>
                 </CardHeader>
-                <CardContent className="flex flex-col gap-2 h-full">
-                    <PokemonTile activePkmn={true} player={p} pokemon={p.pokemon} index={0} />
+                <CardContent className="flex flex-col gap-5 h-full">
+                    <PokemonTile activePkmn={true} pokemon={p.pokemon} />
                     <div className="flex flex-col gap-2 text-xs uppercase">
                         {p.pokemon.moves.map((m, i) => (
-                            <MoveTile player={p} move={m} index={i} />
+                            <div key={`${p.username}-${p.pokemon.id}-${p.activePokemonIndex}-${m.name}-${i}`}>
+                                <MoveTile move={m} />
+                            </div>
                         ))}
                     </div>
                 </CardContent>
                 <CardFooter className="flex gap-2">
                     {p.pokemonTeam.map((pokemon, index) => (
-                        <PokemonTile activePkmn={false} player={p} pokemon={pokemon} index={index} />
+                        <div key={`${p.username}-${pokemon.id}-${index}`}>
+                            <PokemonTile activePkmn={false} pokemon={pokemon} />
+                        </div>
                     ))}
                 </CardFooter>
             </Card>

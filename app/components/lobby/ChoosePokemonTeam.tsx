@@ -9,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandList } from "~/components/ui/command";
 import PokemonSlotComboboxOption from "./PokemonSlotComboboxOption";
 import { Badge } from "../ui/badge";
+import PokeSprite from "../PokeSprite";
 
 interface ChoosePokemonTeamProps {
     player: PlayerDto;
@@ -18,7 +19,7 @@ interface ChoosePokemonTeamProps {
 type SlotIndex = 0 | 1 | 2 | 3 | 4 | 5;
 
 export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTeamProps) {
-    const { pkmnGen, getSprite } = useGameContext();
+    const { pkmnGen } = useGameContext();
     const [pokeOptions, setPokeOptions] = useState<SimplePokemonDto[]>([]);
 
     useEffect(() => {
@@ -38,7 +39,6 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
     }, [pkmnGen]);
 
     const [activeSlot, setActiveSlot] = useState<SlotIndex>(0);
-    const [sprites, setSprites] = useState<string[]>([]);
 
     const [comboboxOpen, setComboboxOpen] = useState<boolean>(false);
     const [comboboxVal, setComboboxVal] = useState<number | null>(null);
@@ -47,25 +47,6 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
         const slotValue = player.pkmnTeam[activeSlot];
         setComboboxVal(slotValue);
     }, [activeSlot, player.pkmnTeam]);
-
-    useEffect(() => {
-        let cancelled = false;
-        const loadSprites = async () => {
-            const spritesArray = await Promise.all(
-                player.pkmnTeam.map(async (id) => {
-                    if (!id) return "";
-                    return await getSprite(id);
-                })
-            );
-            if (!cancelled) {
-                setSprites(spritesArray);
-            }
-        };
-        loadSprites();
-        return () => {
-            cancelled = true;
-        };
-    }, [player.pkmnTeam, pokeOptions, getSprite]);
 
     return (
         <>
@@ -83,9 +64,7 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
                             }}
                         >
                             <div className="h-10 flex flex-col items-center">
-                                {p != null && sprites[index] !== null && sprites[index] !== "" && (
-                                    <img src={sprites[index]} alt={p.name} className="h-full place-content-start" />
-                                )}
+                                {p != null && <PokeSprite id={p.id} scale={1} />}
                             </div>
                             <div className="uppercase font-pokemon text-xs">{p != null ? p.name : "--"}</div>
                         </Button>

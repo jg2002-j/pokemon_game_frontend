@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useRef, useState, useCallback } f
 import { toast } from "sonner";
 import { useGameContext } from "./GameContext";
 import type { WsMessage } from "~/types/WsMessage";
-import { getGenFromName } from "~/types/Generation";
+import { getGenFromNum, getGenFromName } from "~/types/Generation";
 import type { Player } from "~/types/Player";
 import type { PlayerTurnOption } from "~/types/PlayerTurnOptions";
 
@@ -24,7 +24,6 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     const handleMessage = (event: MessageEvent) => {
         try {
             const data = JSON.parse(event.data);
-            toast.warning("Received malformed payload from server.");
             handleEvent(data);
         } catch (err) {
             console.error("WS parse error", err);
@@ -37,8 +36,9 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
             toast.error(data.result.message);
             return;
         }
+        console.log(data);
         const { pkmnGen, pkmnLvl, players, playerTurnOptions } = data.payload;
-        setPkmnGen(getGenFromName(pkmnGen));
+        setPkmnGen(getGenFromNum(pkmnGen));
         setPkmnLvl(pkmnLvl);
         const playerArray: Player[] = Object.values(players);
         setPlayers(playerArray);

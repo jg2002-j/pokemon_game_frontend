@@ -6,8 +6,8 @@ export default function Game() {
     return (
         <div className="p-5 flex flex-col gap-10 pt-24">
             <GameSection />
-            <Stats />
             <Scoreboard />
+            <Stats />
         </div>
     );
 }

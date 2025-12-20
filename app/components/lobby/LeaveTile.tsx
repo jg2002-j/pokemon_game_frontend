@@ -16,10 +16,9 @@ import {
 
 interface LeaveTileProps {
     player: Player;
-    index: number;
 }
 
-export default function LeaveTile({ player, index }: LeaveTileProps) {
+export default function LeaveTile({ player }: LeaveTileProps) {
     const leave = async (username: string) => {
         try {
             const res = await fetch("/clapped/player/leave/" + username, {
@@ -35,7 +34,7 @@ export default function LeaveTile({ player, index }: LeaveTileProps) {
     };
 
     return (
-        <div key={index} className="grid grid-cols-6 gap-2 items-center">
+        <div className="grid grid-cols-6 gap-2 items-center">
             <img src={player.avatarUrl} alt={`${player.username}-avatar`} className="size-12 col-span-1" />
             <h4 className="font-pokemon col-span-2">{player.username}</h4>
             <div className="col-span-2 flex gap-1 items-center px-2">

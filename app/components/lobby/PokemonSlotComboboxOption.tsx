@@ -5,6 +5,7 @@ import { CheckIcon } from "lucide-react";
 import { cn } from "~/lib/utils";
 import type { SimplePokemonDto } from "./types/SimplePokemonDto";
 import type { PlayerDto } from "./types/PlayerDto";
+import PokeSprite from "../PokeSprite";
 
 interface PokemonSlotComboboxOptionProps {
     p: SimplePokemonDto;
@@ -23,13 +24,6 @@ export default function PokemonSlotComboboxOption({
     setOpen,
     setPlayer,
 }: PokemonSlotComboboxOptionProps) {
-    const { getSprite } = useGameContext();
-    const [sprite, setSprite] = useState<string | null>(null);
-
-    useEffect(() => {
-        getSprite(p.id).then(setSprite);
-    }, [getSprite, p.id]);
-
     const updateSlotChoice = (currentValue: number) => {
         setValue(currentValue === value ? null : currentValue);
         setOpen(false);
@@ -51,7 +45,7 @@ export default function PokemonSlotComboboxOption({
         >
             <div className="flex gap-3 items-center">
                 <div className="w-10">
-                    {sprite && <img src={sprite} alt={p.name} className="h-6 place-content-start" />}
+                    <PokeSprite id={p.id} scale={1} />
                 </div>
                 <span className="text-xs">{p.name}</span>
             </div>

@@ -1,15 +1,20 @@
+import { useEffect } from "react";
 import { useGameContext } from "~/contexts/GameContext";
 
+import { toast } from "sonner";
+
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import PokeSprite from "~/components/PokeSprite";
 
 import { PokemonSpriteChoices, PokemonSprites, type PokemonSpriteChoice } from "~/types/Sprites";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { checkSpriteOptionIsValidForGen } from "~/lib/sprites";
+import type { Generation } from "~/types/Generation";
 
 export default function SpriteSelector() {
-    const { spriteChoice, setSpriteChoice, getSprite, pkmnGen, logMsg } = useGameContext();
-    const [spriteLink, setSpriteLink] = useState<string | null>(null);
+    const { spriteChoice, setSpriteChoice, pkmnGen, logMsg } = useGameContext();
+
+    const checkSpriteOptionIsValidForGen = (val: PokemonSpriteChoice, pkmnGen: Generation) => {
+        return PokemonSprites[val].gen === 0 || PokemonSprites[val].gen >= pkmnGen.number;
+    };
 
     const updateSpriteChoice = (val: PokemonSpriteChoice) => {
         if (checkSpriteOptionIsValidForGen(val, pkmnGen)) {
@@ -31,13 +36,9 @@ export default function SpriteSelector() {
         }
     }, [spriteChoice, pkmnGen]);
 
-    useEffect(() => {
-        getSprite(25).then(setSpriteLink);
-    }, [getSprite, spriteChoice]);
-
     return (
         <div className="flex gap-3 items-center">
-            {spriteLink && <img src={spriteLink} alt="Sprite visualisation" className="max-h-8" />}
+            <PokeSprite id={25} scale={1} />
             <Select
                 value={spriteChoice?.toString()}
                 onValueChange={(val) => updateSpriteChoice(val as PokemonSpriteChoice)}

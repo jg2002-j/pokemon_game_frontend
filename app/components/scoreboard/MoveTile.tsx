@@ -3,16 +3,12 @@ import type { Move } from "~/types/Move";
 import type { Player } from "~/types/Player";
 
 interface MoveTileProps {
-    player: Player;
     move: Move;
-    index: number;
 }
 
-export default function MoveTile({ player, move, index }: MoveTileProps) {
+export default function MoveTile({ move }: MoveTileProps) {
     return (
-        <TooltipProvider
-            key={`${player.username}-${player.pokemon.id}-${player.activePokemonIndex}-${move.name}-${index}`}
-        >
+        <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
                     <div className="rounded border px-2 py-1 grid grid-cols-4 gap-5 items-center">
@@ -26,7 +22,7 @@ export default function MoveTile({ player, move, index }: MoveTileProps) {
                 <TooltipContent className="flex flex-col gap-2 font-pokemon text-xs max-w-48 select-none">
                     <h4 className="font-bold text-base">{move.name}</h4>
                     <div>
-                        <img src={move.type.imgLink} alt={move.type.name} className="h-4" />
+                        <img src={move.type.imgLink} alt={move.type.name} className="h-3" />
                     </div>
                     <div className="w-full grid grid-cols-2 gap-x-5">
                         <h5>PP:</h5>

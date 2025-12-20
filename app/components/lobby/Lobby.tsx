@@ -43,7 +43,6 @@ export default function Lobby() {
     };
 
     useEffect(() => {
-        console.log(player);
         const { errors } = isValidPlayer(player);
         setErrors(errors);
     }, [player]);
@@ -124,13 +123,17 @@ export default function Lobby() {
                         <div className="flex flex-col gap-2">
                             {team1.length > 0 && <h3 className="text-2xl">Team 1</h3>}
                             {team1.map((player, index) => (
-                                <LeaveTile player={player} index={index} />
+                                <div key={`${player.username}-${index}`}>
+                                    <LeaveTile player={player} />
+                                </div>
                             ))}
                         </div>
                         <div className="flex flex-col gap-2">
                             {team2.length > 0 && <h3 className="text-2xl">Team 2</h3>}
                             {team2.map((player, index) => (
-                                <LeaveTile player={player} index={index} />
+                                <div key={`${player.username}-${index}`}>
+                                    <LeaveTile player={player} />
+                                </div>
                             ))}
                         </div>
                     </CardContent>

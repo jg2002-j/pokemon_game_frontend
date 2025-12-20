@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 
-import { Generations, type GenerationName } from "~/types/Generation";
+import { Generations, type Generation, type GenerationName } from "~/types/Generation";
 import { useGameContext } from "~/contexts/GameContext";
 import { toast } from "sonner";
 
 export default function GameSettings() {
-    const { pkmnLvl, setPkmnLvl, pkmnGen, setPkmnGen } = useGameContext();
+    const { pkmnLvl, pkmnGen } = useGameContext();
+
+    const [lvlChoice, setLvlChoice] = useState<number>(pkmnLvl);
+    const [genChoice, setGenChoice] = useState<Generation>(pkmnGen);
 
     const submitSettings = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -19,8 +22,8 @@ export default function GameSettings() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    level: pkmnLvl,
-                    gen: pkmnGen.number,
+                    level: lvlChoice,
+                    gen: genChoice,
                 }),
             });
             if (!res.ok) {
@@ -49,8 +52,8 @@ export default function GameSettings() {
                                 type="number"
                                 min={10}
                                 max={100}
-                                value={pkmnLvl}
-                                onChange={(e) => setPkmnLvl(Number(e.target.value))}
+                                value={lvlChoice}
+                                onChange={(e) => setLvlChoice(Number(e.target.value))}
                             />
                         </CardContent>
                         <CardFooter className="flex gap-2"></CardFooter>
@@ -62,10 +65,10 @@ export default function GameSettings() {
                         </CardHeader>
                         <CardContent>
                             <Select
-                                value={pkmnGen?.slug}
+                                value={genChoice.slug}
                                 onValueChange={(val) => {
                                     const key = val as GenerationName;
-                                    setPkmnGen(Generations[key]);
+                                    setGenChoice(Generations[key]);
                                 }}
                             >
                                 <SelectTrigger className="w-45">

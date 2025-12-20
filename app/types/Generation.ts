@@ -16,7 +16,7 @@ export const Generations: Record<GenerationName, Generation> = {
     viii: { slug: "viii", number: 8 },
 };
 
-export const getGenerationFromNum = (num: number): Generation => {
+export const getGenFromNum = (num: number): Generation => {
     const gen = Object.values(Generations).find((gen) => gen.number === num);
     if (!gen) throw new Error(`Generation with number ${num} not found`);
     return gen;

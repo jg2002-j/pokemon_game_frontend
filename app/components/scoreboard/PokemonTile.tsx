@@ -6,30 +6,23 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/comp
 
 import type { Player } from "~/types/Player";
 import type { Pokemon } from "~/types/Pokemon";
+import PokeSprite from "../PokeSprite";
 
 interface PokemonTileProps {
     activePkmn: boolean;
-    player: Player;
     pokemon: Pokemon;
-    index: number;
 }
 
-export default function PokemonTile({ activePkmn, player, pokemon, index }: PokemonTileProps) {
-    const { getSprite } = useGameContext();
-    const [sprite, setSprite] = useState<string>("");
-    const sizes = activePkmn ? "w-16 h-16" : "w-8 h-8";
+export default function PokemonTile({ activePkmn, pokemon }: PokemonTileProps) {
+    const scale = activePkmn ? 2 : 1;
     const hpPercent = Math.max(0, Math.min(100, (pokemon.currentHp / pokemon.baseStats.HP) * 100));
 
-    useEffect(() => {
-        getSprite(pokemon.id).then(setSprite);
-    }, [getSprite]);
-
     return (
-        <TooltipProvider key={`${player.username}-${pokemon.id}-${index}`}>
+        <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
                     <div className="flex w-full gap-5 items-center">
-                        <img src={sprite} alt={pokemon.name} className={sizes} />
+                        <PokeSprite id={pokemon.id} scale={scale} />
                         {activePkmn && (
                             <div className="w-full flex flex-col gap-2">
                                 <div className="flex justify-between items-baseline">
@@ -46,8 +39,8 @@ export default function PokemonTile({ activePkmn, player, pokemon, index }: Poke
                 <TooltipContent className="flex flex-col gap-2 font-pokemon text-xs select-none">
                     <h4 className="font-pokemon text-base">{pokemon.name.toUpperCase()}</h4>
                     <div className="flex gap-1">
-                        {pokemon.types.map((t) => (
-                            <img src={t.imgLink} alt={t.name} className="h-4" />
+                        {pokemon.types.map((t, index) => (
+                            <img key={index} src={t.imgLink} alt={t.name} className="h-3" />
                         ))}
                     </div>
                     <div className="grid grid-cols-2 gap-x-5 items-center">
@@ -67,8 +60,8 @@ export default function PokemonTile({ activePkmn, player, pokemon, index }: Poke
                     <div className="grid grid-cols-2 gap-x-5 items-center font-bold uppercase">
                         {!activePkmn && (
                             <>
-                                {pokemon.moves.map((move) => (
-                                    <div>{move.name}</div>
+                                {pokemon.moves.map((move, index) => (
+                                    <div key={index}>{move.name}</div>
                                 ))}
                             </>
                         )}

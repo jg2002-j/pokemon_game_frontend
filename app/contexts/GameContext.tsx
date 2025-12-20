@@ -1,5 +1,4 @@
 import { type ReactNode, useState, useContext, createContext, useMemo } from "react";
-import { getCroppedSprite } from "../lib/sprites";
 import { Generations, type Generation } from "../types/Generation";
 import type { LogMessage } from "../types/LogMessage";
 import type { Player } from "../types/Player";
@@ -18,7 +17,6 @@ interface GameContextType {
 
     spriteChoice: PokemonSpriteChoice;
     setSpriteChoice: React.Dispatch<React.SetStateAction<PokemonSpriteChoice>>;
-    getSprite: (pkmnId: number) => Promise<string>;
 
     turnNum: number | null;
     setTurnNum: React.Dispatch<React.SetStateAction<number | null>>;
@@ -53,10 +51,6 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
         setLogs((prev) => [...prev, logEntry]);
     };
 
-    const getSprite = async (pkmnId: number) => {
-        return getCroppedSprite(pkmnId, spriteChoice, pkmnGen);
-    };
-
     const { team1, team2 } = useMemo(() => {
         const t1: Player[] = [];
         const t2: Player[] = [];
@@ -88,7 +82,6 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                 setPkmnGen,
                 spriteChoice,
                 setSpriteChoice,
-                getSprite,
                 turnNum,
                 setTurnNum,
                 players,
