@@ -1,29 +1,34 @@
 import { useMemo } from "react";
 import { useGameContext } from "~/contexts/GameContext";
-import { PokemonSprites } from "~/types/Sprites";
+import { PokemonSprites, type PokemonSpriteChoice } from "~/types/Sprites";
 
 interface PokeSpriteProps {
     id: number;
     scale: number;
+    overrideGame?: PokemonSpriteChoice;
 }
 
-export default function PokeSprite({ id, scale }: PokeSpriteProps) {
+export default function PokeSprite({ id, scale, overrideGame }: PokeSpriteProps) {
     const { spriteChoice, pkmnGen } = useGameContext();
-    const imgLink = useMemo(() => {
-        const spriteInfo = PokemonSprites[spriteChoice];
+    const effectiveChoice = overrideGame ?? spriteChoice;
 
-        const isShowdownChoice = spriteChoice === "Pokémon Showdown";
-        const shouldFallback =
-            isShowdownChoice || !spriteInfo || !(spriteInfo.gen === 0 || spriteInfo.gen >= pkmnGen.number);
+    const imgLink = useMemo(() => {
+        const spriteInfo = PokemonSprites[effectiveChoice];
+
+        const isShowdownChoice = effectiveChoice === "Pokémon Showdown";
+        const shouldFallback = overrideGame
+            ? isShowdownChoice || !spriteInfo
+            : isShowdownChoice || !spriteInfo || !(spriteInfo.gen === 0 || spriteInfo.gen >= pkmnGen.number);
 
         const base = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
 
         return shouldFallback
             ? `${base}/other/showdown/${id}.gif`
             : `${base}/${spriteInfo.path}/${id}.${spriteInfo.animated ? "gif" : "png"}`;
-    }, [id, spriteChoice, pkmnGen.number]);
+    }, [id, effectiveChoice, overrideGame, pkmnGen.number]);
 
-    const size = PokemonSprites[spriteChoice].baseSize * scale;
+    const spriteInfo = PokemonSprites[effectiveChoice];
+    const size = (spriteInfo?.baseSize ?? 96) * scale;
 
     return (
         <div className={`border h-[${size}px] aspect-square flex items-center justify-center`}>

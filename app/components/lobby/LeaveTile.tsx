@@ -26,7 +26,7 @@ export default function LeaveTile({ player }: LeaveTileProps) {
                 headers: { "Content-Type": "application/json" },
             });
             if (!res.ok) throw new Error("Failed to remove player.");
-            toast.success(`Removed player from game: ${player.username}`);
+            toast.success(`Removed player from game: ${username}`);
         } catch (err) {
             console.error(err);
             toast.error("Error removing player from game, please try again.");

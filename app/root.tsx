@@ -5,8 +5,8 @@ import type { Route } from "./+types/root";
 
 import { GameProvider } from "./contexts/GameContext";
 import { Toaster } from "~/components/ui/sonner";
-import Toolbar from "./components/home/Toolbar";
 import { WebSocketProvider } from "./contexts/WebSocketContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,12 +42,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
     return (
-        <GameProvider>
-            <WebSocketProvider>
-                <Toolbar />
-                <Outlet />
-            </WebSocketProvider>
-        </GameProvider>
+        <ThemeProvider>
+            <GameProvider>
+                <WebSocketProvider>
+                    <Outlet />
+                </WebSocketProvider>
+            </GameProvider>
+        </ThemeProvider>
     );
 }
 

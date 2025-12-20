@@ -20,7 +20,7 @@ export default function SpriteSelector() {
         if (checkSpriteOptionIsValidForGen(val, pkmnGen)) {
             setSpriteChoice(val);
             toast.success("Pokémon sprites updated to " + val);
-            logMsg("Pokémon sprites to " + val);
+            logMsg("Pokémon sprites updated to " + val);
         } else {
             toast.error(
                 "This isn't a valid choice. Please choose a game that is in Generation " +

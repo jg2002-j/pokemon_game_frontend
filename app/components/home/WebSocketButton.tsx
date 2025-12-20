@@ -15,7 +15,7 @@ export default function WebSocketButton() {
                 </Button>
             ) : (
                 <Button onClick={connect}>
-                    <Unplug /> Connect Websocket
+                    <Unplug /> Connect to Server
                 </Button>
             )}
         </div>
