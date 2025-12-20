@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "../ui/card";
 
 import type { Player } from "~/types/Player";
-import type { ActionType } from "~/types/events/ActionType";
+import type { ActionType } from "~/types/ActionType";
 
 interface PlayerActionCardProps {
     player: Player;

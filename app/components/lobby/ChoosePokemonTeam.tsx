@@ -23,6 +23,7 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
     const [pokeOptions, setPokeOptions] = useState<SimplePokemonDto[]>([]);
 
     useEffect(() => {
+        let isCancelled = false;
         const fetchAllPokemon = async () => {
             try {
                 const response = await fetch("/clapped/pokemon/validForGen/" + pkmnGen.number, {
@@ -30,13 +31,18 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
                     headers: { "Content-Type": "application/json" },
                 });
                 const allPkmn: SimplePokemonDto[] = await response.json();
-                setPokeOptions(allPkmn.sort((a, b) => a.id - b.id));
+                if (!isCancelled) {
+                    setPokeOptions(allPkmn.sort((a, b) => a.id - b.id));
+                }
             } catch (err) {
-                console.error(err);
+                console.error("Error fetching pokemon:", err);
             }
         };
         fetchAllPokemon();
-    }, [pkmnGen]);
+        return () => {
+            isCancelled = true;
+        };
+    }, [pkmnGen.number]);
 
     const [activeSlot, setActiveSlot] = useState<SlotIndex>(0);
 
