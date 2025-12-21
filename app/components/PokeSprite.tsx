@@ -1,14 +1,16 @@
 import { useMemo } from "react";
 import { useGameContext } from "~/contexts/GameContext";
+import { cn } from "~/lib/utils";
 import { PokemonSprites, type PokemonSpriteChoice } from "~/types/Sprites";
 
 interface PokeSpriteProps {
     id: number;
-    scale: number;
     overrideGame?: PokemonSpriteChoice;
+    containerSize?: string;
+    imgScale?: string;
 }
 
-export default function PokeSprite({ id, scale, overrideGame }: PokeSpriteProps) {
+export default function PokeSprite({ id, overrideGame, containerSize, imgScale }: PokeSpriteProps) {
     const { spriteChoice, pkmnGen } = useGameContext();
     const effectiveChoice = overrideGame ?? spriteChoice;
 
@@ -28,11 +30,15 @@ export default function PokeSprite({ id, scale, overrideGame }: PokeSpriteProps)
     }, [id, effectiveChoice, overrideGame, pkmnGen.number]);
 
     const spriteInfo = PokemonSprites[effectiveChoice];
-    const size = (spriteInfo?.baseSize ?? 96) * scale;
+    const defaultImgScale = spriteInfo.defaultScale;
 
     return (
-        <div className={`border h-[${size}px] aspect-square flex items-center justify-center`}>
-            <img src={imgLink} alt="" className="max-w-full max-h-full" />
+        <div className={cn("aspect-square flex items-center justify-center", containerSize)}>
+            <img
+                src={imgLink}
+                alt={`Pokemon-${id}`}
+                className={cn("max-h-full max-w-full", imgScale ?? defaultImgScale)}
+            />
         </div>
     );
 }

@@ -69,8 +69,8 @@ export default function ChoosePokemonTeam({ player, setPlayer }: ChoosePokemonTe
                                 setActiveSlot(index as SlotIndex);
                             }}
                         >
-                            <div className="h-10 flex flex-col items-center">
-                                {p != null && <PokeSprite id={p.id} scale={1} />}
+                            <div className="h-15 flex flex-col items-center">
+                                {p != null && <PokeSprite id={p.id} containerSize="h-full" />}
                             </div>
                             <div className="uppercase font-pokemon text-xs">{p != null ? p.name : "--"}</div>
                         </Button>

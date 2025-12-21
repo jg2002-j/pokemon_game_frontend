@@ -1,10 +1,6 @@
-import { useEffect, useState } from "react";
-import { useGameContext } from "~/contexts/GameContext";
-
 import { Progress } from "~/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 
-import type { Player } from "~/types/Player";
 import type { Pokemon } from "~/types/Pokemon";
 import PokeSprite from "../PokeSprite";
 
@@ -22,7 +18,7 @@ export default function PokemonTile({ activePkmn, pokemon }: PokemonTileProps) {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <div className="flex w-full gap-5 items-center">
-                        <PokeSprite id={pokemon.id} scale={scale} />
+                        <PokeSprite id={pokemon.id} />
                         {activePkmn && (
                             <div className="w-full flex flex-col gap-2">
                                 <div className="flex justify-between items-baseline">

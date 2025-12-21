@@ -1,4 +1,4 @@
-export type GenerationName = "i" | "ii" | "iii" | "iv" | "v" | "vi" | "vii" | "viii";
+export type GenerationName = "i" | "ii" | "iii" | "iv" | "v" | "vi" | "vii";
 
 export interface Generation {
     slug: GenerationName;
@@ -13,7 +13,6 @@ export const Generations: Record<GenerationName, Generation> = {
     v: { slug: "v", number: 5 },
     vi: { slug: "vi", number: 6 },
     vii: { slug: "vii", number: 7 },
-    viii: { slug: "viii", number: 8 },
 };
 
 export const getGenFromNum = (num: number): Generation => {

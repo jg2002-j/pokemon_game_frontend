@@ -47,9 +47,9 @@ export default function GameSettings() {
     ) : (
         <form id="settings" onSubmit={submitSettings} className="flex flex-col gap-10 items-center">
             <div className="flex gap-5">
-                <PokeSprite id={3} scale={3} overrideGame="Black & White (Animated)" />
-                <PokeSprite id={6} scale={3} overrideGame="Black & White (Animated)" />
-                <PokeSprite id={9} scale={3} overrideGame="Black & White (Animated)" />
+                <PokeSprite id={3} containerSize="size-20" overrideGame="Black & White (Animated)" />
+                <PokeSprite id={6} containerSize="size-20" overrideGame="Black & White (Animated)" />
+                <PokeSprite id={9} containerSize="size-20" overrideGame="Black & White (Animated)" />
             </div>
             <div className="flex gap-5">
                 <Card className="w-full min-w-xs max-w-sm">

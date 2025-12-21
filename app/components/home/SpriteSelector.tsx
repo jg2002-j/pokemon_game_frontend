@@ -38,7 +38,7 @@ export default function SpriteSelector() {
 
     return (
         <div className="flex gap-3 items-center">
-            <PokeSprite id={25} scale={1} />
+            <PokeSprite id={25} containerSize="size-10" />
             <Select
                 value={spriteChoice?.toString()}
                 onValueChange={(val) => updateSpriteChoice(val as PokemonSpriteChoice)}

@@ -45,7 +45,7 @@ export default function PokemonSlotComboboxOption({
         >
             <div className="flex gap-3 items-center">
                 <div className="w-10">
-                    <PokeSprite id={p.id} scale={1} />
+                    <PokeSprite id={p.id} containerSize="size-10" />
                 </div>
                 <span className="text-xs">{p.name}</span>
             </div>
