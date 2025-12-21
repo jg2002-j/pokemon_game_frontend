@@ -15,7 +15,7 @@ export default function LobbyPage() {
     return (
         <>
             <Toolbar />
-            <div className="p-5 flex flex-col gap-10 mt-30">
+            <div className="flex flex-col gap-5 border h-screen items-center justify-center">
                 <Lobby />
             </div>
         </>

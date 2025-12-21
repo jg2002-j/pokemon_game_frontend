@@ -5,7 +5,6 @@ export default function TurnBar() {
     const { players, playerTurnOpts } = useGameContext();
     return (
         <>
-            <h1 className="text-7xl font-tanklager font-bold">Game</h1>
             <div className="flex flex-col gap-5">
                 <h2 className="font-tanklager text-5xl mb-5">Take Turn</h2>
                 <div className="flex flex-col gap-5">

@@ -18,7 +18,7 @@ const WebSocketContext = createContext<WebSocketContextValue | null>(null);
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     const socketRef = useRef<WebSocket | null>(null);
-    const { logMsg, setPkmnGen, setPkmnLvl, setPlayers, setPlayerTurnOpts } = useGameContext();
+    const { logMsg, setPkmnGen, setPkmnLvl, setTurnNum, setPlayers, setPlayerTurnOpts } = useGameContext();
     const [connected, setConnected] = useState(false);
 
     const handleMessage = (event: MessageEvent) => {
@@ -37,9 +37,10 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
             return;
         }
         console.log(data);
-        const { pkmnGen, pkmnLvl, players, playerTurnOptions } = data.payload;
+        const { pkmnGen, pkmnLvl, turnNum, players, playerTurnOptions } = data.payload;
         setPkmnGen(getGenFromNum(pkmnGen));
         setPkmnLvl(pkmnLvl);
+        setTurnNum(turnNum);
         const playerArray: Player[] = Object.values(players);
         setPlayers(playerArray);
         const mappedOptions: PlayerTurnOption[] = Object.entries(playerTurnOptions).map(([username, options]) => ({

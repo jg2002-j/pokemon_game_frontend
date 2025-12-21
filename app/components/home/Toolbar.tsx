@@ -28,7 +28,7 @@ export default function Toolbar() {
                         <span className="font-bold text-lg">Generation</span>
                         <Badge>{pkmnGen?.slug.toUpperCase()}</Badge>
                     </div>
-                    <SpriteSelector />
+                    {/* <SpriteSelector /> */}
                 </div>
             </div>
         </>
