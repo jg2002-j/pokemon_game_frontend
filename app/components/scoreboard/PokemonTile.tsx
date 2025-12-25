@@ -3,15 +3,16 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/comp
 
 import type { Pokemon } from "~/types/Pokemon";
 import PokeSprite from "../PokeSprite";
+import PokemonHpBar from "../PokemonHpBar";
 
 interface PokemonTileProps {
     activePkmn: boolean;
     pokemon: Pokemon;
+    hideMoves?: boolean;
 }
 
-export default function PokemonTile({ activePkmn, pokemon }: PokemonTileProps) {
+export default function PokemonTile({ activePkmn, pokemon, hideMoves }: PokemonTileProps) {
     const scale = activePkmn ? 2 : 1;
-    const hpPercent = Math.max(0, Math.min(100, (pokemon.currentHp / pokemon.baseStats.HP) * 100));
 
     return (
         <TooltipProvider>
@@ -27,12 +28,12 @@ export default function PokemonTile({ activePkmn, pokemon }: PokemonTileProps) {
                                         {pokemon.currentHp}/{pokemon.baseStats.HP}
                                     </p>
                                 </div>
-                                <Progress value={hpPercent} className="w-full" />
+                                <PokemonHpBar pokemon={pokemon} />
                             </div>
                         )}
                     </div>
                 </TooltipTrigger>
-                <TooltipContent className="flex flex-col gap-2 font-pokemon text-xs select-none">
+                <TooltipContent className="flex flex-col gap-2 font-pokemon text-xs select-none text-start">
                     <h4 className="font-pokemon text-base">{pokemon.name.toUpperCase()}</h4>
                     <div className="flex gap-1">
                         {pokemon.types.map((t, index) => (
@@ -53,15 +54,17 @@ export default function PokemonTile({ activePkmn, pokemon }: PokemonTileProps) {
                         <h5>SP. DEF</h5>
                         <p>{pokemon.baseStats.SPECIAL_DEFENSE}</p>
                     </div>
-                    <div className="grid grid-cols-2 gap-x-5 items-center font-bold uppercase">
-                        {!activePkmn && (
-                            <>
-                                {pokemon.moves.map((move, index) => (
-                                    <div key={index}>{move.name}</div>
-                                ))}
-                            </>
-                        )}
-                    </div>
+                    {!hideMoves && (
+                        <div className="grid grid-cols-2 gap-x-5 items-center font-bold uppercase">
+                            {!activePkmn && (
+                                <>
+                                    {pokemon.moves.map((move, index) => (
+                                        <div key={index}>{move.name}</div>
+                                    ))}
+                                </>
+                            )}
+                        </div>
+                    )}
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>

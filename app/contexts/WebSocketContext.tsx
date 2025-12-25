@@ -41,7 +41,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
         setPkmnGen(getGenFromNum(pkmnGen));
         setPkmnLvl(pkmnLvl);
         setTurnNum(turnNum);
-        const playerArray: Player[] = Object.values(players);
+        const playerArray: Player[] = Object.values(players).sort((a, b) => a.username.localeCompare(b.username));
         setPlayers(playerArray);
         const mappedOptions: PlayerTurnOption[] = Object.entries(playerTurnOptions).map(([username, options]) => ({
             username,

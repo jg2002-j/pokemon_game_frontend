@@ -10,8 +10,8 @@ export default function WebSocketButton() {
     return (
         <div>
             {connected ? (
-                <Button variant={"active"}>
-                    <CircleCheck /> Connected
+                <Button size={"icon"} variant={"active"}>
+                    <CircleCheck />
                 </Button>
             ) : (
                 <Button onClick={connect}>

@@ -8,9 +8,10 @@ interface PokeSpriteProps {
     overrideGame?: PokemonSpriteChoice;
     containerSize?: string;
     imgScale?: string;
+    back?: boolean;
 }
 
-export default function PokeSprite({ id, overrideGame, containerSize, imgScale }: PokeSpriteProps) {
+export default function PokeSprite({ id, overrideGame, containerSize, imgScale, back }: PokeSpriteProps) {
     const { spriteChoice, pkmnGen } = useGameContext();
     const effectiveChoice = overrideGame ?? spriteChoice;
 
@@ -24,10 +25,16 @@ export default function PokeSprite({ id, overrideGame, containerSize, imgScale }
 
         const base = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
 
-        return shouldFallback
-            ? `${base}/other/showdown/${id}.gif`
-            : `${base}/${spriteInfo.path}/${id}.${spriteInfo.animated ? "gif" : "png"}`;
-    }, [id, effectiveChoice, overrideGame, pkmnGen.number]);
+        if (shouldFallback) {
+            return `${base}/other/showdown/${back ? "back/" : ""}${id}.gif`;
+        }
+
+        let pathToUse = spriteInfo.path;
+        if (back) {
+            pathToUse = spriteInfo.backPath ?? "other/showdown/back";
+        }
+        return `${base}/${pathToUse}/${id}.${spriteInfo.animated ? "gif" : "png"}`;
+    }, [id, effectiveChoice, overrideGame, pkmnGen.number, back]);
 
     const spriteInfo = PokemonSprites[effectiveChoice];
     const defaultImgScale = spriteInfo.defaultScale;

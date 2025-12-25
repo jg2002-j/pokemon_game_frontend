@@ -9,7 +9,7 @@ export default function Toolbar() {
     const { pkmnLvl, pkmnGen, turnNum } = useGameContext();
     return (
         <>
-            <div className="fixed top-0 w-full p-5 flex justify-between items-center gap-5">
+            <div className="fixed z-50 top-0 w-full p-5 flex justify-between items-center gap-5">
                 <div className="flex gap-5">
                     <ThemeButton />
                     <WebSocketButton />

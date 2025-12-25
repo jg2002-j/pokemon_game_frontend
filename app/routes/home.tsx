@@ -11,7 +11,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
     const { connected } = useWebSocket();
     return (
-        <div className="p-5 flex flex-col gap-5 border h-screen items-center justify-center">
+        <div className="pt-20 p-5 flex flex-col gap-5 border min-h-screen items-center justify-center">
             <div className="fixed top-5 left-5">
                 <ThemeButton />
             </div>
