@@ -12,7 +12,7 @@ export default function Switch({ player }: SwitchProps) {
     const [actionDesc, setActionDesc] = useState<string>("");
     return (
         <>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-6 gap-2">
                 {player.pokemonTeam.map((p, index) => (
                     <Button
                         onClick={() => setSwitchChoice(index)}

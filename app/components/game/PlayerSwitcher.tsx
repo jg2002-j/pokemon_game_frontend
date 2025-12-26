@@ -1,57 +1,60 @@
 import React from "react";
 import { useGameContext } from "~/contexts/GameContext";
 import { Button } from "../ui/button";
+import { CircleCheck, CircleDashed } from "lucide-react";
 
-export default function PlayerSwitcher() {
+interface PlayerSwitcherProps {
+    playerNum: number;
+    setPlayerNum: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export default function PlayerSwitcher({ playerNum, setPlayerNum }: PlayerSwitcherProps) {
     const { team1, team2, players, playerTurnOpts } = useGameContext();
 
     return (
-        <div>
-            {/* <div id="switch-player-buttons" className="border w-fit flex gap-5 items-center">
-                            <Button
-                                className=""
-                                size={"icon"}
-                                disabled={playerNum === 0}
-                                onClick={() => {
-                                    if (playerNum - 1 >= 0) {
-                                        setPlayerNum(playerNum - 1);
-                                    }
-                                }}
-                            >
-                                <ArrowBigLeftDash />
-                            </Button>
-                            <Badge className="w-sm text-lg font-black font-pokemon truncate">
-                                {players[playerNum].username}
-                            </Badge>
-                            <Button
-                                className=""
-                                size={"icon"}
-                                disabled={playerNum === players.length - 1}
-                                onClick={() => {
-                                    if (playerNum + 1 < players.length) {
-                                        setPlayerNum(playerNum + 1);
-                                    }
-                                }}
-                            >
-                                <ArrowBigRightDash />
-                            </Button>
-                        </div> */}
-            <div id="switch-player-menu" className="border flex gap-5">
-                <div className="flex flex-col gap-2">
+        <>
+            <div id="switch-player-menu" className="border grid grid-cols-2 gap-5">
+                <div id="team-1" className="flex flex-col gap-2">
+                    <h3>Team 1</h3>
                     {team1.map((player) => {
                         const options = playerTurnOpts.find((opt) => opt.username === player.username)?.options ?? [];
                         const isDisabled = options.includes("NONE") || options.includes("WAIT");
                         return (
-                            <Button disabled={isDisabled} key={player.username} className="h-fit w-fit p-1 group">
+                            <Button
+                                disabled={isDisabled}
+                                variant={true ? "active" : "default"}
+                                onClick={() => setPlayerNum(players.findIndex((p) => p.username === player.username))}
+                                key={player.username}
+                                className="h-fit p-1 pe-2 flex items-center justify-start group w-fit transition-all ease-in-out"
+                            >
                                 <img src={player.avatarUrl} alt={player.username} className="border h-10" />
-                                <div className="w-0 overflow-hidden group-hover:w-fit transition-all ease-in-out">
-                                    {player.username}
-                                </div>
+                                {true ? <CircleCheck /> : <CircleDashed />}
+                                <p className="hidden group-hover:block font-pokemon">{player.username}</p>
+                            </Button>
+                        );
+                    })}
+                </div>
+                <div id="team-2" className="flex flex-col gap-2">
+                    <h3>Team 1</h3>
+                    {team2.map((player) => {
+                        const options = playerTurnOpts.find((opt) => opt.username === player.username)?.options ?? [];
+                        const isDisabled = options.includes("NONE") || options.includes("WAIT");
+                        return (
+                            <Button
+                                disabled={isDisabled}
+                                variant={true ? "active" : "default"}
+                                onClick={() => setPlayerNum(players.findIndex((p) => p.username === player.username))}
+                                key={player.username}
+                                className="h-fit p-1 pe-2 flex items-center justify-start group w-fit transition-all ease-in-out"
+                            >
+                                <img src={player.avatarUrl} alt={player.username} className="border h-10" />
+                                {true ? <CircleCheck /> : <CircleDashed />}
+                                <p className="hidden group-hover:block font-pokemon">{player.username}</p>
                             </Button>
                         );
                     })}
                 </div>
             </div>
-        </div>
+        </>
     );
 }

@@ -7,7 +7,7 @@ export default function Game() {
     return (
         <>
             <Toolbar />
-            <div className="pt-20 p-5 min-h-screen flex flex-col gap-20">
+            <div className="pt-24 p-5 min-h-screen flex flex-col gap-20">
                 <TurnPanel />
                 <Scoreboard />
                 <Stats />
