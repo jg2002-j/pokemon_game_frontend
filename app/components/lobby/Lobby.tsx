@@ -6,6 +6,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { Spinner } from "~/components/ui/spinner";
 
 import type { PlayerDto } from "./types/PlayerDto";
 import ChoosePokemonTeam from "./ChoosePokemonTeam";
@@ -55,12 +56,15 @@ export default function Lobby() {
         const { valid, errors } = isValidPlayer(player);
         if (valid) {
             try {
+                setSubmitting(true);
+
                 const res = await fetch("/clapped/player/join", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(player),
                 });
                 if (!res.ok) throw new Error("Failed to save player.");
+                setSubmitting(false);
                 toast.success(`Added new player to game: ${player.username}`);
                 setPlayer(blankPlayer);
             } catch (err) {
@@ -89,52 +93,65 @@ export default function Lobby() {
         }
     };
 
+    const [submitting, setSubmitting] = useState<boolean>(false);
+    const [waitText, setWaitText] = useState<string>("Please wait.");
+
     return turnNum !== null && turnNum > 0 ? (
         <LobbyClosed />
     ) : (
         <div className="flex flex-col gap-10">
             <div className="border flex gap-10 items-center justify-center">
-                <div className="flex flex-col gap-10 w-fit ">
-                    <form onSubmit={addNewPlayer} className="flex flex-col gap-5">
-                        <Card id="choosePokemonTeam" className="h-full max-w-lg">
-                            <CardHeader>
-                                <CardTitle className="font-tanklager text-4xl">Join Game</CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex flex-col gap-10">
-                                <div className="flex items-center gap-10 px-3">
-                                    <AvatarSelection player={player} setPlayer={setPlayer} />
-                                    <div id="username" className="w-full flex flex-col gap-2 items-start">
-                                        <Label>Username</Label>
-                                        <Input
-                                            type="text"
-                                            value={player?.username}
-                                            onChange={(e) => setPlayer({ ...player, username: e.target.value })}
-                                        />
-                                    </div>
-                                    <PlayerTeamButtons player={player} setPlayer={setPlayer} />
-                                </div>
-                                <ChoosePokemonTeam player={player} setPlayer={setPlayer} />
+                <div className="flex flex-col gap-10 min-w-lg w-fit">
+                    {submitting ? (
+                        <Card className="flex flex-col gap-5">
+                            <CardHeader className="font-tanklager text-3xl">Validating...</CardHeader>
+                            <CardContent className="flex gap-5 items-center">
+                                <Spinner />
+                                <p className="font-pokemon text-sm">{waitText}</p>
                             </CardContent>
                         </Card>
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <div className="select-none flex flex-col">
-                                        <Button disabled={errors.length > 0}>Submit</Button>
+                    ) : (
+                        <form onSubmit={addNewPlayer} className="flex flex-col gap-5">
+                            <Card id="choosePokemonTeam" className="h-full max-w-lg">
+                                <CardHeader>
+                                    <CardTitle className="font-tanklager text-4xl">Join Game</CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex flex-col gap-10">
+                                    <div className="flex items-center gap-10 px-3">
+                                        <AvatarSelection player={player} setPlayer={setPlayer} />
+                                        <div id="username" className="w-full flex flex-col gap-2 items-start">
+                                            <Label>Username</Label>
+                                            <Input
+                                                type="text"
+                                                value={player?.username}
+                                                onChange={(e) => setPlayer({ ...player, username: e.target.value })}
+                                            />
+                                        </div>
+                                        <PlayerTeamButtons player={player} setPlayer={setPlayer} />
                                     </div>
-                                </TooltipTrigger>
-                                {errors.length > 0 && (
-                                    <TooltipContent className="bg-red-400">
-                                        <ul className="list-disc list-inside fonto">
-                                            {errors.map((e, index) => (
-                                                <li key={index}>{e}</li>
-                                            ))}
-                                        </ul>
-                                    </TooltipContent>
-                                )}
-                            </Tooltip>
-                        </TooltipProvider>
-                    </form>
+                                    <ChoosePokemonTeam player={player} setPlayer={setPlayer} />
+                                </CardContent>
+                            </Card>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div className="select-none flex flex-col">
+                                            <Button disabled={errors.length > 0}>Submit</Button>
+                                        </div>
+                                    </TooltipTrigger>
+                                    {errors.length > 0 && (
+                                        <TooltipContent className="bg-red-400">
+                                            <ul className="list-disc list-inside fonto">
+                                                {errors.map((e, index) => (
+                                                    <li key={index}>{e}</li>
+                                                ))}
+                                            </ul>
+                                        </TooltipContent>
+                                    )}
+                                </Tooltip>
+                            </TooltipProvider>
+                        </form>
+                    )}
                 </div>
                 <LeavePanel />
             </div>
