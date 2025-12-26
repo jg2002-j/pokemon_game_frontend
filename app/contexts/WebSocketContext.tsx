@@ -18,7 +18,8 @@ const WebSocketContext = createContext<WebSocketContextValue | null>(null);
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     const socketRef = useRef<WebSocket | null>(null);
-    const { logMsg, setPkmnGen, setPkmnLvl, setTurnNum, setPlayers, setPlayerTurnOpts } = useGameContext();
+    const { logMsg, setPkmnGen, setPkmnLvl, setTurnNum, setPlayers, setPlayerTurnOpts, setQueuedActions } =
+        useGameContext();
     const [connected, setConnected] = useState(false);
 
     const handleMessage = (event: MessageEvent) => {
@@ -31,23 +32,22 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     };
 
     const handleEvent = (data: WsMessage) => {
-        logMsg(data.result.message);
-        if (data.type === "ERROR") {
-            toast.error(data.result.message);
-            return;
-        }
         console.log(data);
-        const { pkmnGen, pkmnLvl, turnNum, players, playerTurnOptions } = data.payload;
+        data.logMsgs.forEach((msg) => logMsg(msg));
+        const { pkmnGen, pkmnLvl, turnNum, players, playerTurnOptions, usernamesAndActions } = data.payload;
         setPkmnGen(getGenFromNum(pkmnGen));
         setPkmnLvl(pkmnLvl);
         setTurnNum(turnNum);
         const playerArray: Player[] = Object.values(players).sort((a, b) => a.username.localeCompare(b.username));
         setPlayers(playerArray);
-        const mappedOptions: PlayerTurnOption[] = Object.entries(playerTurnOptions).map(([username, options]) => ({
-            username,
-            options,
-        }));
-        setPlayerTurnOpts(mappedOptions);
+        const mappedPlayerTurnOptions: PlayerTurnOption[] = Object.entries(playerTurnOptions).map(
+            ([username, options]) => ({ username, options })
+        );
+        setPlayerTurnOpts(mappedPlayerTurnOptions);
+        const mappedPlayerQueuedActions: PlayerQueuedAction[] = Object.entries(usernamesAndActions).map(
+            ([username, actionStr]) => ({ username, actionStr })
+        );
+        setQueuedActions(mappedPlayerQueuedActions);
     };
 
     const connect = useCallback(() => {

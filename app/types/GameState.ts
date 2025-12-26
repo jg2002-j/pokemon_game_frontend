@@ -7,4 +7,5 @@ export interface GameState {
     turnNum: number;
     players: Record<string, Player>;
     playerTurnOptions: Record<string, ActionType[]>;
+    usernamesAndActions: Record<string, string>;
 }

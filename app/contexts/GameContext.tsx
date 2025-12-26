@@ -27,6 +27,9 @@ interface GameContextType {
     playerTurnOpts: PlayerTurnOption[];
     setPlayerTurnOpts: React.Dispatch<React.SetStateAction<PlayerTurnOption[]>>;
 
+    queuedActions: PlayerQueuedAction[];
+    setQueuedActions: React.Dispatch<React.SetStateAction<PlayerQueuedAction[]>>;
+
     team1: Player[];
     team2: Player[];
 }
@@ -43,6 +46,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     const [turnNum, setTurnNum] = useState<number | null>(null);
     const [players, setPlayers] = useState<Player[]>([]);
     const [playerTurnOpts, setPlayerTurnOpts] = useState<PlayerTurnOption[]>([]);
+    const [queuedActions, setQueuedActions] = useState<PlayerQueuedAction[]>([]);
 
     const logMsg = (msg: string) => {
         console.log(msg);
@@ -88,6 +92,8 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
                 setPlayers,
                 playerTurnOpts,
                 setPlayerTurnOpts,
+                queuedActions,
+                setQueuedActions,
                 team1,
                 team2,
             }}
