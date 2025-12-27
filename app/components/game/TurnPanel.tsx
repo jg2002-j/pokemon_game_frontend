@@ -8,17 +8,12 @@ export default function TurnPanel() {
     const { players } = useGameContext();
     const [playerNum, setPlayerNum] = useState<number>(0);
 
-    useEffect(() => {
-        console.log(playerNum);
-        console.log(players[playerNum]);
-    }, [players, playerNum]);
-
     return (
         players.length > 0 && (
             <>
                 <div className="flex flex-col pt-10 gap-10 border items-center">
                     <CurrentFieldView player={players[playerNum]} />
-                    <div className="grid grid-cols-3 gap-10 items-start border">
+                    <div className="grid grid-cols-3 gap-10 items-start justify-items-center border">
                         <PlayerSwitcher playerNum={playerNum} setPlayerNum={setPlayerNum} />
                         <PlayerActionCard player={players[playerNum]} />
                     </div>

@@ -8,7 +8,6 @@ interface HealProps {
 
 export default function Heal({ player }: HealProps) {
     const [healChoice, setHealChoice] = useState<string | null>(null);
-    const [actionDesc, setActionDesc] = useState<string>("");
     return (
         <>
             <div className="grid grid-cols-2 gap-2">

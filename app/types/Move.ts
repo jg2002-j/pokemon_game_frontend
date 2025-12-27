@@ -1,3 +1,4 @@
+import type { MoveTarget } from "./MoveTarget";
 import type { PokeType } from "./PokeType";
 
 export interface Move {
@@ -10,4 +11,5 @@ export interface Move {
     type: PokeType;
     damageClass: string;
     textDesc: string;
+    target: MoveTarget;
 }

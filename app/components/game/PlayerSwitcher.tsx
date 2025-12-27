@@ -23,7 +23,7 @@ export default function PlayerSwitcher({ playerNum, setPlayerNum }: PlayerSwitch
                             : false;
                         const isDisabled = options.includes("NONE") || options.includes("WAIT") || hasTakenTurn;
                         return (
-                            <TooltipProvider>
+                            <TooltipProvider key={player.username}>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Button
@@ -34,14 +34,13 @@ export default function PlayerSwitcher({ playerNum, setPlayerNum }: PlayerSwitch
                                             onClick={() =>
                                                 setPlayerNum(players.findIndex((p) => p.username === player.username))
                                             }
-                                            key={player.username}
                                             className="h-fit ps-2 p-1 flex items-center justify-start w-fit"
                                         >
                                             {hasTakenTurn ? <CircleCheck /> : <CircleDashed />}
                                             <img src={player.avatarUrl} alt={player.username} className="h-8" />
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent className="font-pokemon text-sm select-none">
+                                    <TooltipContent side="right" className="font-pokemon text-sm select-none">
                                         <p className="font-black">{player.username}</p>
                                         <p className="text-xs">{hasTakenTurn ? "Turn queued." : "Turn pending."}</p>
                                     </TooltipContent>
@@ -58,7 +57,7 @@ export default function PlayerSwitcher({ playerNum, setPlayerNum }: PlayerSwitch
                             : false;
                         const isDisabled = options.includes("NONE") || options.includes("WAIT") || hasTakenTurn;
                         return (
-                            <TooltipProvider>
+                            <TooltipProvider key={player.username}>
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Button
@@ -69,14 +68,13 @@ export default function PlayerSwitcher({ playerNum, setPlayerNum }: PlayerSwitch
                                             onClick={() =>
                                                 setPlayerNum(players.findIndex((p) => p.username === player.username))
                                             }
-                                            key={player.username}
                                             className="h-fit ps-2 p-1 flex items-center justify-start w-fit"
                                         >
                                             {hasTakenTurn ? <CircleCheck /> : <CircleDashed />}
                                             <img src={player.avatarUrl} alt={player.username} className="h-8" />
                                         </Button>
                                     </TooltipTrigger>
-                                    <TooltipContent className="font-pokemon text-sm select-none">
+                                    <TooltipContent side="right" className="font-pokemon text-sm select-none">
                                         <p className="font-black">{player.username}</p>
                                         <p className="text-xs">{hasTakenTurn ? "Turn queued." : "Turn pending."}</p>
                                     </TooltipContent>

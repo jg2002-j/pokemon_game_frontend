@@ -1,0 +1,17 @@
+export type MoveTarget =
+    | "SPECIFIC_MOVE"
+    | "SELECTED_POKEMON_ME_FIRST"
+    | "ALLY"
+    | "USERS_FIELD"
+    | "USER_OR_ALLY"
+    | "OPPONENTS_FIELD"
+    | "USER"
+    | "RANDOM_OPPONENT"
+    | "ALL_OTHER_POKEMON"
+    | "SELECTED_POKEMON"
+    | "ALL_OPPONENTS"
+    | "ENTIRE_FIELD"
+    | "USER_AND_ALLIES"
+    | "ALL_POKEMON"
+    | "ALL_ALLIES"
+    | "FAINTING_POKEMON";
