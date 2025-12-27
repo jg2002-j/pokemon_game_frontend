@@ -30,12 +30,21 @@ export default function GameSettings() {
                 }),
             });
             if (!res.ok) {
-                throw new Error();
+                if (res.status === 400) {
+                    const errorMsgs = await res.json();
+                    errorMsgs.forEach((str: string) => {
+                        toast.error(str);
+                    });
+                } else {
+                    throw new Error();
+                }
+            } else {
+                const successMsgs = await res.json();
+                successMsgs.forEach((str: string) => {
+                    toast.success(str);
+                });
+                navigate("/lobby");
             }
-            toast.success(
-                `Pokémon Level set to ${pkmnLvl} and Pokémon Generation set to ${pkmnGen.slug.toUpperCase()}.`
-            );
-            navigate("/lobby");
         } catch (err) {
             console.error(err);
             toast.error("Error saving game settings, please try again.");

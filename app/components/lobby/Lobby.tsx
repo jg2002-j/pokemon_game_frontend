@@ -57,24 +57,35 @@ export default function Lobby() {
         if (valid) {
             try {
                 setSubmitting(true);
-
                 const res = await fetch("/clapped/player/join", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(player),
                 });
-                if (!res.ok) throw new Error("Failed to save player.");
+                if (!res.ok) {
+                    if (res.status === 400) {
+                        const errorMsgs = await res.json();
+                        setErrors(errorMsgs);
+                        errorMsgs.forEach((str: string) => {
+                            toast.error(str);
+                        });
+                    } else {
+                        throw new Error();
+                    }
+                } else {
+                    const successMsgs = await res.json();
+                    successMsgs.forEach((str: string) => {
+                        toast.success(str);
+                    });
+                    setPlayer(blankPlayer);
+                }
                 setSubmitting(false);
-                toast.success(`Added new player to game: ${player.username}`);
-                setPlayer(blankPlayer);
             } catch (err) {
                 console.error(err);
-                toast.error("Error saving player to game, please try again.");
+                toast.error("Server-side error saving player to game, please try again later.");
             }
         } else {
             setErrors(errors);
-            errors.forEach((e) => logMsg(e));
-            toast.error("There are one or more errors with the new player.");
         }
     };
 
@@ -84,12 +95,25 @@ export default function Lobby() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
             });
-            if (!res.ok) throw new Error("Failed to finalise teams.");
-            toast.success(`Teams confirmed!`);
-            navigate("/game");
+            if (!res.ok) {
+                if (res.status === 400) {
+                    const errorMsgs = await res.json();
+                    setErrors(errorMsgs);
+                    errorMsgs.forEach((str: string) => {
+                        toast.error(str);
+                    });
+                } else {
+                    throw new Error();
+                }
+            } else {
+                const successMsgs = await res.json();
+                successMsgs.forEach((str: string) => {
+                    toast.success(str);
+                });
+                navigate("/game");
+            }
         } catch (err) {
             console.error(err);
-            toast.error("Error finalising teams, please try again.");
         }
     };
 
@@ -100,7 +124,7 @@ export default function Lobby() {
         <LobbyClosed />
     ) : (
         <div className="flex flex-col gap-10">
-            <div className="border flex gap-10 items-center justify-center">
+            <div className="flex gap-10 items-center justify-center">
                 <div className="flex flex-col gap-10 min-w-lg w-fit">
                     {submitting ? (
                         <Card className="flex flex-col gap-5">
@@ -140,8 +164,8 @@ export default function Lobby() {
                                         </div>
                                     </TooltipTrigger>
                                     {errors.length > 0 && (
-                                        <TooltipContent className="bg-red-400">
-                                            <ul className="list-disc list-inside fonto">
+                                        <TooltipContent className="text-gray-200 bg-red-900">
+                                            <ul className="list-disc list-inside font-pokemon">
                                                 {errors.map((e, index) => (
                                                     <li key={index}>{e}</li>
                                                 ))}

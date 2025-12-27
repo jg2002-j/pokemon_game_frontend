@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import PokemonHpBar from "../PokemonHpBar";
 import type { Move } from "~/types/Move";
+import ErrorBox from "../ErrorBox";
 
 interface AttackProps {
     player: Player;
@@ -18,11 +19,10 @@ export default function Attack({ player }: AttackProps) {
     const [move, setMove] = useState<Move | null>(null);
     const [target, setTarget] = useState<Player | null>(null);
 
-    const isTarget = () => {
-        return true;
-    };
+    const [errors, setErrors] = useState<string[]>([]);
 
     const submitAttack = async () => {
+        setErrors([]);
         if (move !== null && target !== null) {
             try {
                 const res = await fetch(
@@ -32,16 +32,33 @@ export default function Attack({ player }: AttackProps) {
                         headers: { "Content-Type": "application/json" },
                     }
                 );
-                if (!res.ok) throw new Error("Failed to submit attack move.");
-                console.log(res);
-                toast.success(`Move confirmed!`);
+                if (!res.ok) {
+                    if (res.status === 400) {
+                        const errorMsgs = await res.json();
+                        setErrors(errorMsgs);
+                        errorMsgs.forEach((str: string) => {
+                            toast.error(str);
+                        });
+                    } else {
+                        throw new Error();
+                    }
+                } else {
+                    const successMsgs = await res.json();
+                    successMsgs.forEach((str: string) => {
+                        toast.success(str);
+                    });
+                }
             } catch (err) {
                 console.error(err);
-                toast.error("Error submitting attack move, please try again.");
+                toast.error("Server-side error submitting action for turn, please try again later.");
             }
         } else {
-            toast.error("You must choose a move and a target.");
+            setErrors(["You must select a target and a move to use."]);
         }
+    };
+
+    const isTarget = () => {
+        return true;
     };
 
     return (
@@ -128,6 +145,7 @@ export default function Attack({ player }: AttackProps) {
                             </TooltipProvider>
                         ))}
                     </div>
+                    {errors.length > 0 && <ErrorBox errors={errors} />}
                     <div className="self-end">
                         <Button onClick={() => setMove(null)} className="font-pokemon uppercase text-xs">
                             Back

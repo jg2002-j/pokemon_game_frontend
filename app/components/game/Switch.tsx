@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import PokeSprite from "../PokeSprite";
 import { toast } from "sonner";
 import type { Pokemon } from "~/types/Pokemon";
+import ErrorBox from "../ErrorBox";
 
 interface SwitchProps {
     player: Player;
@@ -11,25 +12,38 @@ interface SwitchProps {
 
 export default function Switch({ player }: SwitchProps) {
     const [switchIndex, setSwitchIndex] = useState<number | null>(null);
+    const [errors, setErrors] = useState<string[]>([]);
 
     const submitSwitch = async () => {
+        setErrors([]);
         if (switchIndex !== null) {
             try {
                 const res = await fetch("/clapped/turn/switch/" + player.username + "/" + switchIndex, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                 });
-                if (!res.ok) throw new Error("Failed to submit switch move.");
-                const successMsgs = await res.json();
-                successMsgs.forEach((str: string) => {
-                    toast.success(str);
-                });
+                if (!res.ok) {
+                    if (res.status === 400) {
+                        const errorMsgs = await res.json();
+                        setErrors(errorMsgs);
+                        errorMsgs.forEach((str: string) => {
+                            toast.error(str);
+                        });
+                    } else {
+                        throw new Error();
+                    }
+                } else {
+                    const successMsgs = await res.json();
+                    successMsgs.forEach((str: string) => {
+                        toast.success(str);
+                    });
+                }
             } catch (err) {
                 console.error(err);
-                toast.error("Error submitting switch move, please try again.");
+                toast.error("Server-side error submitting action for turn, please try again later.");
             }
         } else {
-            toast.error("You must choose a new Pokémon to send out.");
+            setErrors(["You must select a Pokémon to switch to."]);
         }
     };
 
@@ -56,6 +70,7 @@ export default function Switch({ player }: SwitchProps) {
                     </Button>
                 ))}
             </div>
+            {errors.length > 0 && <ErrorBox errors={errors} />}
             <Button disabled={switchIndex === null} onClick={() => submitSwitch()} className="font-pokemon uppercase">
                 Submit
             </Button>
