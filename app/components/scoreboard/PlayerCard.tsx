@@ -10,7 +10,7 @@ interface PlayerCardProps {
 export default function PlayerCard({ p }: PlayerCardProps) {
     return (
         <>
-            <Card className="w-full min-w-xs max-w-sm">
+            <Card className="w-full min-w-xs max-w-sm select-none">
                 <CardHeader>
                     <CardTitle className="font-tanklager text-4xl">{p.username}</CardTitle>
                 </CardHeader>
